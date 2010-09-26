@@ -1,0 +1,78 @@
+# a Treetop Grammar to parse a subset of the C language
+#
+
+grammar Cparse
+
+  rule decls
+	' '* decl ' '* decls?
+  end
+  rule decl
+    comment / var_decl / block
+  end
+  rule comment
+    '/*' (  [^*] / ('*' [^//]) )*  '*/'
+  end
+  rule var_decl
+    type ' '* varitem var_list? ';'
+  end
+  rule type
+    ("float" / "int") pointer
+  end
+  rule varitem
+    pointer var
+  end
+  rule pointer
+    '*'*
+  end
+  rule digit
+    [0-9]
+  end
+  rule nat
+    digit digit*
+  end
+  rule ival
+    nat / ('-' nat)
+  end
+  rule fval
+    (digit* '.' nat) / (nat '.' digit*) / ival
+  end
+  rule id
+    [a-zA-Z] [a-zA-Z_0-9]*
+  end
+  rule var
+    id array* assign?
+  end
+  rule array 
+    ('[' ival ']') / ('[' ']')
+  end
+  rule assign
+    ' '* '=' ' '* fval
+  end
+  rule var_list
+    (',' ' '* varitem var_list?)
+  end
+  rule block
+    '{' ' '* statement_list ' '* '}'
+  end
+  rule statement_list
+    statement ' '* statement_list?
+  end
+  rule statement
+       ("if" ' '* '(' expr ')' statement )          
+     / ("if" '(' expr ')' then_statement "else" statement)       
+     / ( "while" '(' expr ')' statement )
+     / expr ';'
+  end
+  rule then_statement
+       ("if" '(' expr ')' then_statement "else" then_statement )
+     / ("while" '(' expr ')' then_statment ) 
+     / expr ' '* ';'
+  end
+  rule expr
+      value
+  end
+  rule value
+    fval / ('(' expr ')') / id
+  end
+end
+
