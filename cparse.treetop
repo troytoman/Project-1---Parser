@@ -3,11 +3,17 @@
 
 grammar Cparse
 
-  rule decls
-	' '* decl ' '* decls?
+  rule statement_list
+	statement statement_list?
   end
-  rule decl
-    comment / var_decl / block
+  rule statement
+      comment 
+    / var_decl 
+    / block 
+    / ("if" ' '* '(' expr ')' ' '* statement )          
+    / ("if" ' '* '(' expr ')' ' '* then_statement "else" ' '* statement)       
+    / ( "while" ' '* '(' expr ')' ' '* statement )
+    / expr ' '* ';'
   end
   rule comment
     '/*' (  [^*] / ('*' [^//]) )*  '*/'
@@ -16,10 +22,17 @@ grammar Cparse
     type ' '* varitem var_list? ';'
   end
   rule type
-    ("float" / "int") pointer
+      float pointer
+    / int pointer
+  end
+  rule float
+    "float"
+  end
+  rule int
+    "int"
   end
   rule varitem
-    pointer var
+    pointer var assign?
   end
   rule pointer
     '*'*
@@ -40,10 +53,10 @@ grammar Cparse
     [a-zA-Z] [a-zA-Z_0-9]*
   end
   rule var
-    id array* assign?
+    id array*
   end
   rule array 
-    ('[' ival ']') / ('[' ']')
+    ('[' ival ']') / ('[' ']') / ('[' id ']')
   end
   rule assign
     ' '* '=' ' '* fval
@@ -54,25 +67,29 @@ grammar Cparse
   rule block
     '{' ' '* statement_list ' '* '}'
   end
-  rule statement_list
-    statement ' '* statement_list?
-  end
-  rule statement
-       ("if" ' '* '(' expr ')' statement )          
-     / ("if" '(' expr ')' then_statement "else" statement)       
-     / ( "while" '(' expr ')' statement )
-     / expr ';'
-  end
   rule then_statement
-       ("if" '(' expr ')' then_statement "else" then_statement )
-     / ("while" '(' expr ')' then_statment ) 
+       ("if" '(' expr ')' ' '* then_statement "else" ' '* then_statement )
+     / ("while" '(' expr ')' ' '* then_statment ) 
      / expr ' '* ';'
   end
   rule expr
-      value
+      var '=' expr
+    / value '<' value
+    / value '>' value
+    / value '==' value
+    / value '&&' value
+    / value '||' value
+    / value '/' expr
+    / value '*' expr
+    / value '+' expr
+    / value '-' expr
+    / '!' expr
+    / '(' expr ')'
+    / value
   end
   rule value
-    fval / ('(' expr ')') / id
+      var
+    / fval
   end
 end
 
