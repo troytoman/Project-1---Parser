@@ -10,16 +10,16 @@ grammar Cparse
       comment 
     / var_decl 
     / block 
-    / ("if" ' '* '(' expr ')' ' '* statement )          
-    / ("if" ' '* '(' expr ')' ' '* then_statement "else" ' '* statement)       
-    / ( "while" ' '* '(' expr ')' ' '* statement )
-    / expr ' '* ';'
+    / ("if" '(' expr ')' statement )          
+    / ("if" '(' expr ')' then_statement "else" statement)       
+    / ( "while" '(' expr ')' statement )
+    / expr ';'
   end
   rule comment
     '/*' (  [^*] / ('*' [^//]) )*  '*/'
   end
   rule var_decl
-    type ' '* varitem var_list? ';'
+    type varitem var_list? ';'
   end
   rule type
       float pointer
@@ -59,18 +59,18 @@ grammar Cparse
     ('[' ival ']') / ('[' ']') / ('[' id ']')
   end
   rule assign
-    ' '* '=' ' '* fval
+    '=' fval
   end
   rule var_list
-    (',' ' '* varitem var_list?)
+    (',' varitem var_list?)
   end
   rule block
-    '{' ' '* statement_list ' '* '}'
+    '{' statement_list ' '* '}'
   end
   rule then_statement
-       ("if" '(' expr ')' ' '* then_statement "else" ' '* then_statement )
-     / ("while" '(' expr ')' ' '* then_statment ) 
-     / expr ' '* ';'
+       ("if" '(' expr ')' then_statement "else" then_statement )
+     / ("while" '(' expr ')' then_statment ) 
+     / expr ';'
   end
   rule expr
       var '=' expr
