@@ -74,22 +74,50 @@ grammar Cparse
   end
   rule expr
       var '=' expr
-    / value '<' value
+    / or_expr
+  end
+  rule or_expr
+      value '||' value
+    / and_expr
+  end
+
+  rule and_expr
+      value '&&' value
+    / equate_expr
+  end
+
+  rule equate_expr
+      value '==' value
+    / compare_expr
+  end
+
+  rule compare_expr
+      value '<' value
     / value '>' value
-    / value '==' value
-    / value '&&' value
-    / value '||' value
-    / value '/' expr
-    / value '*' expr
-    / value '+' expr
+    / add_expr
+  end
+
+  rule add_expr
+      value '+' expr
     / value '-' expr
-    / '!' expr
-    / '(' expr ')'
+    / mult_expr
+  end
+
+  rule mult_expr
+      value '/' expr
+    / value '*' expr
+    / unary_expr
+  end
+
+  rule unary_expr
+      '!' expr
     / value
   end
+
   rule value
       var
     / fval
+    / '(' expr ')'
   end
 end
 
