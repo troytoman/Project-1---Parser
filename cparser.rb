@@ -10,26 +10,28 @@ Treetop.load 'cparse'
 puts 'Loaded cparse grammar with no problems...'
 
 class Proj1Parser
+  attr_reader :message, :result
+  
   def initialize
     puts 'initializing'
    @cparser =  CparseParser.new
   end
   
   def parse (input)
-    input.gsub!(' ','')
-    input.gsub!(/[\n\r]/, "")
-    puts input
+    input.gsub!(' ',"")         #remove spaces
+    input.gsub!(/[\n\r]/, "")   #remove other whitespace characters
     if @cparser.parse(input)
-      puts "I say yes! I understand!"
+      @message = "Yes! I understand!"
       true
     else
-      puts "I say no, I don't understand."
+      @message = "No, I don't understand.\n"
       unless @cparser.terminal_failures.empty?
-        puts @cparser.failure_reason
+        @message += @cparser.failure_reason
       else
-        puts "I had a problem with line #{parser.failure_line} column #{parser.index+1}"
-        puts "To be honest, I was not expecting you to say anything more."
+        @message += "I had a problem with line #{parser.failure_line} column #{parser.index+1}\n"
+        @message += "To be honest, I was not expecting you to say anything more.\n"
       end
+      false
     end    
   end
    

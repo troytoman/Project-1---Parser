@@ -1,0 +1,52 @@
+README file for CS 5363 Project 1 submission
+
+Troy Toman
+troytoman@mac.com
+
+This parser currently recognizes all token types and language constructs as specified in the Project 1 guidelines.
+
+This project was implemented using the Ruby language and leverages a Ruby Parser library called Treetop which is available as open source. 
+
+You can find more information about Treetop at 
+
+http://treetop.rubyforge.org/
+
+INSTALLATION INSTRUCTIONS
+
+- You must install Ruby on the system
+   - Information on installing Ruby on Mac, Windows, Linux or Solaris can be found at:
+       http://www.ruby-lang.org/en/downloads/
+   - This was developed using Ruby 1.9.2 on a Mac
+   - I have also tested this on Ruby 1.8.6 and Ruby 1.8.7 on a Mac
+- Once Ruby is installed you must install the Treetop gem
+   - gem install treetop
+
+- At this point you can run the program with the following command:
+
+> ruby project1.rb
+
+You will be prompted for an input file. I have provided "testinput.c" which contains the sample input from the project specification. I have also included "badtestinput.c" which has a syntax error and will be rejected by the parser.
+
+CURRENT STATE OF THE COMPILER
+
+	- The project is complete as specified.
+	- Known bugs: Currently the program uses a brute force method to strip whitespace characters. This can cause issues with id's that are separated by whitespace (incorrectly) and mask some syntax errors. For instance, the declaration "int x, y z;" should probably fail. This is actually parsed as valid because the "y z" is seen as a token yz by the parser. It is technically valid input but probably not what would be intended. Similarly, if a keyword like else is mistyped like "els i=0;" The parser will accept this as though it were elsi=0. I am not certain if this is an issue that needs to be addressed in the final program.
+
+PROJECT TESTING
+
+I tested the program manually with the two input files mentioned above.
+
+I also used TDD (test driven development) to build the program using a tool called Rspec. You can run the unit test by installing Rspec:
+
+gem install rspec
+
+and running the command (assuming you have installed rspec 2.0):
+
+>rspec parser_spec.rb --format d
+
+if you are running a prior version of rspec then the command is:
+
+>spec parser_spec.rb --format specdoc
+
+In parser_spec.rb, you fill find two failing tests that highlight the known bug above. 
+

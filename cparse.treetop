@@ -47,7 +47,10 @@ grammar Cparse
     nat / ('-' nat)
   end
   rule fval
-    (digit* '.' nat) / (nat '.' digit*) / ival
+      ([+-]? digit* '.'? digit* [eE] [+-]? nat )
+    / ([+-]? digit* '.' nat) 
+    / ([+-]? nat '.' digit*) 
+    / ival
   end
   rule id
     [a-zA-Z] [a-zA-Z_0-9]*
@@ -77,7 +80,7 @@ grammar Cparse
     / or_expr
   end
   rule or_expr
-      value '||' value
+      value '||' and_expr
     / and_expr
   end
 
