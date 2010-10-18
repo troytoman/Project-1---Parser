@@ -18,8 +18,10 @@ class Proj1Parser
   end
   
   def parse (input)
-    input.gsub!(' ',"")         #remove spaces
-    input.gsub!(/[\n\r]/, "")   #remove other whitespace characters
+    
+    input.gsub!(/([^a-zA-Z0-9])\s*/,'\1')    #remove whitespace (except near IDs)
+    input.gsub!(/\s*([^a-zA-Z0-9])/,'\1')      
+
     if @cparser.parse(input)
       @message = "Yes! I understand!"
       true
