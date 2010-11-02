@@ -1,0 +1,11 @@
+int test, x, t;
+if (test > 10) {
+	x=x+1;
+	if (t == 0) {
+		x=0;
+	} else {
+		x=10;
+	}
+} else {
+	x=1;
+}

@@ -20,7 +20,10 @@ class Proj1Parser
   def parse (input)
     
     input.gsub!(/([^a-zA-Z0-9])\s*/,'\1')    #remove whitespace (except near IDs)
-    input.gsub!(/\s*([^a-zA-Z0-9])/,'\1')      
+    input.gsub!(/\s*([^a-zA-Z0-9{}])/,'\1')    
+    input.gsub!(/\/\*(([^\*])|(\*[^\/]))*\*\//,'')  
+    
+    puts input
 
     if @cparser.parse(input)
       @message = "Yes! I understand!"
@@ -33,6 +36,7 @@ class Proj1Parser
         @message += "I had a problem with line #{parser.failure_line} column #{parser.index+1}\n"
         @message += "To be honest, I was not expecting you to say anything more.\n"
       end
+      puts message
       false
     end    
   end

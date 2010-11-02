@@ -1,0 +1,8 @@
+int test,x;
+if (test) {
+	x=x;
+} else if (test) {
+	x=x+1;
+} else {
+	x=x+2;
+}

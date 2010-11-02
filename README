@@ -30,7 +30,7 @@ You will be prompted for an input file. I have provided "testinput.c" which cont
 CURRENT STATE OF THE COMPILER
 
 	- The project is complete as specified.
-	- Known bugs: Currently the program uses a brute force method to strip whitespace characters. This can cause issues with id's that are separated by whitespace (incorrectly) and mask some syntax errors. For instance, the declaration "int x, y z;" should probably fail. This is actually parsed as valid because the "y z" is seen as a token yz by the parser. It is technically valid input but probably not what would be intended. Similarly, if a keyword like else is mistyped like "els i=0;" The parser will accept this as though it were elsi=0. I am not certain if this is an issue that needs to be addressed in the final program.
+	- Known bugs: None known. This is the second submission and fixed the error I pointed out in my initial submission.
 
 PROJECT TESTING
 
@@ -48,5 +48,5 @@ if you are running a prior version of rspec then the command is:
 
 >spec parser_spec.rb --format specdoc
 
-In parser_spec.rb, you fill find two failing tests that highlight the known bug above. 
+In parser_spec.rb, you will find the tests used on the project. 
 
