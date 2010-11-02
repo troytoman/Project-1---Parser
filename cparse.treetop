@@ -52,14 +52,21 @@ grammar Cparse
     / ival
   end
   rule id
-    [a-zA-Z_] [a-zA-Z_0-9]*
+    (!keyword [a-zA-Z_]) [a-zA-Z_0-9]* 
+  end
+  rule keyword
+    "if"
+  / "else"
+  / "while"
+  / "for"
+  / "int"
+  / "float"
   end
   rule var
     id array*
   end
   rule array 
       ('[' ival ']') 
-#    / ('[' ']') 
     / ('[' id ']')
   end
   rule assign
