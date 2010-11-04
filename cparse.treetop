@@ -4,55 +4,55 @@
 grammar Cparse
 
   rule statement_list
-	statement statement_list? 
+	statement statement_list? <Body>
   end
   rule statement
-      comment 
-    / var_decl 
-    / ("if" '(' expr ')' then_statement "else " statement) 
-    / ("if" '(' expr ')' statement )       
-    / ("while" '(' expr ')' statement )
+      var_decl 
+    / ("if" '(' expr ')' then_statement "else " statement) <IfThenElse>
+    / ("if" '(' expr ')' statement )       <IfThen>
+    / ("while" '(' expr ')' statement )    <While>
     / other_statement
   end
-  rule comment
-    '/*' (  [^*] / ('*' [^//]) )*  '*/'
-  end
+#  rule comment
+#    '/*' (  [^*] / ('*' [^//]) )*  '*/'
+#  end
   rule var_decl
-    type ' '* varitem var_list? ';'
+    type ' '* varitem var_list? ';' <VariableDeclaration>
   end
   rule type
-      float pointer
-    / int pointer
+      float pointer <TypeFloat>
+    / int pointer <TypeInt>
   end
   rule float
-    "float"
+    "float" 
   end
   rule int
-    "int"
+    "int" 
   end
   rule varitem
-    pointer var assign?
+    pointer var assign? <VariableListItem>
   end
   rule pointer
-    '*'*
+    '*'* 
   end
   rule digit
     [0-9]
   end
   rule nat
-    digit digit*
+    digit digit* <IntegerLiteral>
   end
   rule ival
-    nat / ('-' nat)
+      nat  
+    / ('-' nat <IntegerLiteral>)  
   end
   rule fval
-      ([+-]? digit* '.'? digit* [eE] [+-]? nat )
-    / ([+-]? digit* '.' nat) 
-    / ([+-]? nat '.' digit*) 
-    / ival
+      ([+-]? digit* '.'? digit* [eE] [+-]? nat ) <FloatLiteral>
+    / ([+-]? digit* '.' nat) <FloatLiteral>
+    / ([+-]? nat '.' digit*) <FloatLiteral>
+    / ival 
   end
   rule id
-    (!keyword [a-zA-Z_]) [a-zA-Z_0-9]* 
+    (!keyword [a-zA-Z_] ) [a-zA-Z_0-9]* <Identifier>
   end
   rule keyword
     "if"
@@ -63,20 +63,20 @@ grammar Cparse
   / "float"
   end
   rule var
-    id array*
+    id array* <Variable>
   end
   rule array 
       ('[' ival ']') 
     / ('[' id ']')
   end
   rule assign
-    '=' expr
+    '=' expr <Assignment>
   end
   rule var_list
-    (',' varitem var_list?)
+    ',' varitem var_list? <VarList>
   end
   rule block
-    '{' statement_list ' '* '}'
+    '{' statement_list ' '* '}' <Block>
   end
   rule then_statement
        ("if" '(' expr ')' then_statement "else" then_statement )
@@ -84,55 +84,55 @@ grammar Cparse
     / other_statement
   end
   rule other_statement
-      block 
+      block
     / expr ';'
   end
   rule expr
-      var '=' expr
+      var '=' expr <Expression>
     / or_expr
   end
   rule or_expr
-      value '||' and_expr
+      value '||' and_expr <OrExpression>
     / and_expr
   end
 
   rule and_expr
-      value '&&' value
+      value '&&' value <AndExpression>
     / equate_expr
   end
 
   rule equate_expr
-      value '==' value
+      value '==' value <EquateExpression>
     / compare_expr
   end
 
   rule compare_expr
-      value '<' value
-    / value '>' value
+      value '<' value <LTExpression>
+    / value '>' value <GTExpression>
     / add_expr
   end
 
   rule add_expr
-      value '+' expr
-    / value '-' expr
+      value '+' expr <AddExpression>
+    / value '-' expr <MinusExpression>
     / mult_expr
   end
 
   rule mult_expr
-      value '/' expr
-    / value '*' expr
+      value '/' expr <DivExpression>
+    / value '*' expr <MultExpression>
     / unary_expr
   end
 
   rule unary_expr
-      '!' expr
+      '!' expr  <NotExpression>
     / value
   end
 
   rule value
       var
     / fval
-    / '(' expr ')'
+    / '(' expr ')' <ParenExpression>
   end
 end
 

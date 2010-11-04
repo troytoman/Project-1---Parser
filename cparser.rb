@@ -6,6 +6,8 @@ require 'rubygems'
 require 'treetop'
 puts 'Loaded Treetop with no problems...'
 
+require './node_extensions.rb'
+
 Treetop.load 'cparse'
 puts 'Loaded cparse grammar with no problems...'
 
@@ -23,11 +25,13 @@ class Proj1Parser
     input.gsub!(/\s*([^a-zA-Z0-9{}])/,'\1')    
     input.gsub!(/\/\*(([^\*])|(\*[^\/]))*\*\//,'')  
     
-    puts input
+#    puts input
 
-    if @cparser.parse(input)
+    tree = @cparser.parse(input)
+
+    if tree != nil
       @message = "Yes! I understand!"
-      true
+ #     true
     else
       @message = "No, I don't understand.\n"
       unless @cparser.terminal_failures.empty?
@@ -37,8 +41,17 @@ class Proj1Parser
         @message += "To be honest, I was not expecting you to say anything more.\n"
       end
       puts message
-      false
+ #     false
     end    
+    self.clean_tree(tree)
+#    return tree
+    return tree.to_array
+
   end
-   
+     
+    def clean_tree(root_node)
+      return if(root_node.elements.nil?)
+      root_node.elements.delete_if{|node| node.class.name == "Treetop::Runtime::SyntaxNode" }
+      root_node.elements.each {|node| self.clean_tree(node) }
+    end
 end

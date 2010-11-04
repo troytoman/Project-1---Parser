@@ -17,7 +17,10 @@ parseFile = File.new(filename, "r")
 
 parsestring = parseFile.read
 
-parser.parse(parsestring)
-  puts parser.message 
+tree= parser.parse(parsestring)
+  
+  puts parser
+
+  puts tree.to_array
   
 puts ("\n" * 2)
