@@ -45,13 +45,14 @@ class Proj1Parser
     end    
     self.clean_tree(tree)
 #    return tree
-    return tree.to_array
+    return tree#.to_array
 
   end
      
-    def clean_tree(root_node)
-      return if(root_node.elements.nil?)
-      root_node.elements.delete_if{|node| node.class.name == "Treetop::Runtime::SyntaxNode" }
-      root_node.elements.each {|node| self.clean_tree(node) }
-    end
+  def clean_tree(root_node)
+    return if(root_node.elements.nil?)
+    root_node.elements.delete_if{|node| node.class.name == "Treetop::Runtime::SyntaxNode" }
+ #   root_node.elements.each {|node| node.class.name == "Cparse::VarList"}
+    root_node.elements.each {|node| self.clean_tree(node) }
+  end
 end
