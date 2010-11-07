@@ -27,7 +27,7 @@ grammar Cparse
     "int" 
   end
   rule varitem
-    pointer var assign? <VariableListItem>
+    pointer var init? <VariableListItem>
   end
   rule pointer
     '*'* 
@@ -66,8 +66,8 @@ grammar Cparse
       ('[' ival ']') 
     / ('[' id ']')
   end
-  rule assign
-    '=' expr <Assignment>
+  rule init
+    '=' expr <Init>
   end
   rule var_list
     ',' varitem var_list? <VarList>

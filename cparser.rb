@@ -7,25 +7,6 @@ require 'treetop'
 puts 'Loaded Treetop with no problems...'
 
 require './node_extensions.rb'
-require 'tree'
-
-class Tree::TreeNode
-  def print_tree(level = 0)
-    if is_root?
-      print "*"
-    else
-      print "|" unless parent.is_last_sibling?
-      print(' ' * (level - 1) * 4)
-      print(is_last_sibling? ? "+" : "|")
-      print "---"
-      print(has_children? ? "+" : ">")
-    end
-
-    puts " #{content}"
-
-    children { |child| child.print_tree(level + 1)}
-  end
-end
 
 Treetop.load 'cparse'
 puts 'Loaded cparse grammar with no problems...'
@@ -36,6 +17,7 @@ class Proj1Parser
   def initialize
     puts 'initializing'
    @cparser =  CparseParser.new
+   @symbol_table = {}
   end
   
   def parse (input)
@@ -56,11 +38,13 @@ class Proj1Parser
       #    tree.printout
           ast = tree.to_ast
           if ast.kind_of?(Array) 
-            ast_prime = Tree::TreeNode.new("Program", "Program")
+            ast_prime = ASTTree.new("Program", "Program")
             ast.each  {|node| ast_prime<<node}
+            ast_prime.type_check
             ast_prime.print_tree
             return ast_prime
            else
+             ast.type_check
              ast.print_tree
            return ast
            end

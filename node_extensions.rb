@@ -1,9 +1,10 @@
 # In file node_extensions.rb
 module Cparse
+  require './ast.rb'
   
   class Treetop::Runtime::SyntaxNode
     def to_ast
-      ast_subtree = Tree::TreeNode.new(self.class.name+@interval.first.to_s, @nodedisplay)
+      ast_subtree = ASTTree.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
       self.elements.each do |node| 
         child = node.to_ast
         if child.kind_of?(Array) 
@@ -45,19 +46,19 @@ module Cparse
 
   end
      
-  class Identifier < Treetop::Runtime::SyntaxNode
-    def initialize(input, interval, elements = nil)
-      super(input, interval, elements)
-      @nodedisplay = self.text_value
-    end
-    def to_array
-      return self.text_value
-    end
-    def printout
-      puts ' ' * @interval.first + self.text_value
-      self.elements.map {|x| x.printout}
-    end
-  end
+#  class Identifier < Treetop::Runtime::SyntaxNode
+#    def initialize(input, interval, elements = nil)
+#      super(input, interval, elements)
+#      @nodedisplay = self.text_value
+#    end
+#    def to_array
+#      return self.text_value
+#    end
+#    def printout
+#      puts ' ' * @interval.first + self.text_value
+#      self.elements.map {|x| x.printout}
+#    end
+#  end
      
   class Expression < Treetop::Runtime::SyntaxNode
     def initialize(input, interval, elements = nil)
@@ -100,7 +101,7 @@ module Cparse
       self.elements.map {|x| x.printout}
     end
     def to_ast
-      ast_subtree = Tree::TreeNode.new(self.class.name, @nodedisplay)
+      ast_subtree = ASTTree.new(self.class.name, @nodedisplay)
       self.elements.each do |node| 
         child = node.to_ast
         if child.kind_of?(Array) 
@@ -140,7 +141,7 @@ module Cparse
       self.elements.map {|x| x.printout}
     end
     def to_ast
-      ast_subtree = Tree::TreeNode.new(self.class.name, @nodedisplay)
+      ast_subtree = ASTTree.new(self.class.name, @nodedisplay)
       self.elements.each do |node| 
         child = node.to_ast
         if child.kind_of?(Array) 
@@ -248,7 +249,7 @@ module Cparse
       self.elements.map {|x| x.printout}
     end
     def to_ast
-      ast_subtree = Tree::TreeNode.new(self.class.name, @nodedisplay)
+      ast_subtree = ASTTree.new("remove", "remove")
       self.elements.each do |node| 
         child = node.to_ast
         if child.kind_of?(Array) 
@@ -261,10 +262,10 @@ module Cparse
     end
   end
  
-  class Assignment < Treetop::Runtime::SyntaxNode
+  class Init < Treetop::Runtime::SyntaxNode
     def initialize(input, interval, elements = nil)
       super(input, interval, elements)
-      @nodedisplay = "DeclarationAssignment"
+      @nodedisplay = "Init"
     end
     def to_array
       return self.elements.map {|x| x.to_array}
