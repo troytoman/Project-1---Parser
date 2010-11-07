@@ -4,6 +4,11 @@
 
 require './cparser.rb'
 
+def ast_print(t)
+  puts t.to_s
+  t.children.each {|child| ast_print(child)}
+end
+
 parser = Proj1Parser.new
 
 puts ("\n" * 10)
@@ -19,8 +24,5 @@ parsestring = parseFile.read
 
 tree = parser.parse(parsestring)
   
-#  puts parser
-
-tree.printout
   
 puts ("\n" * 2)

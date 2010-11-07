@@ -8,14 +8,11 @@ grammar Cparse
   end
   rule statement
       var_decl 
-    / ("if" '(' expr ')' then_statement "else " statement) <IfThenElse>
-    / ("if" '(' expr ')' statement )       <IfThen>
-    / ("while" '(' expr ')' statement )    <While>
+    / "if" '(' expr ')' then_statement "else " statement <IfThenElse>
+    / "if" '(' expr ')' statement        <IfThen>
+    / "while" '(' expr ')' statement     <While>
     / other_statement 
   end
-#  rule comment
-#    '/*' (  [^*] / ('*' [^//]) )*  '*/'
-#  end
   rule var_decl
     type ' '* varitem var_list? ';' <VariableDeclaration>
   end
@@ -39,16 +36,16 @@ grammar Cparse
     [0-9]
   end
   rule nat
-    digit digit* <IntegerLiteral>
+    digit digit* #<IntegerLiteral>
   end
   rule ival
-      nat  
+      digit digit*  <IntegerLiteral>
     / ('-' nat <IntegerLiteral>)  
   end
   rule fval
-      ([+-]? digit* '.'? digit* [eE] [+-]? nat ) <FloatLiteral>
-    / ([+-]? digit* '.' nat) <FloatLiteral>
-    / ([+-]? nat '.' digit*) <FloatLiteral>
+      [+-]? digit* '.'? digit* [eE] [+-]? digit digit*  <FloatLiteral>
+    / [+-]? digit* '.' nat <FloatLiteral>
+    / [+-]? nat '.' digit* <FloatLiteral>
     / ival 
   end
   rule id
