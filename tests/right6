@@ -1,0 +1,8 @@
+int test, blah, x, y;
+if (test == blah) {
+	/*do something*/
+	x = x;
+} else {
+	/*do something*/
+	y=y;
+}

@@ -1,24 +1,23 @@
 class ASTTree
   include Enumerable
-  
+
   attr_reader :name
   attr_reader :node_type
   attr_accessor :content
   attr_reader   :parent
-  
-  
+
+
   def initialize(name, node_type = nil, content = nil)
-    raise ArgumentError, "Node name HAS to be provided!" if name == nil
+    raise ArgumentError, "Node name is required!" if name == nil
     @name, @content = name, content
     @node_type = node_type.split("::").last
-#    puts "Node Type Created: " + @node_type
 
     self.set_as_root!
     @children_hash = Hash.new
-    
+
     @children = []
   end
-  
+
   def to_s
     "Node Name: #{@name}" +
       " Node Type: " + (@node_type || "<Empty>") +
@@ -26,16 +25,16 @@ class ASTTree
       " Parent: " + (is_root?()  ? "<None>" : @parent.name) +
       " Children: #{@children.length}" +
       " Total Nodes: #{size()}"
-  end
+      end
 
   def parent=(parent)         # :nodoc:
     @parent = parent
-  end 
+  end
 
   def <<(child)
-   add(child)
-  end 
-  
+    add(child)
+  end
+
   def add(child, at_index = -1)
     raise ArgumentError, "Attempting to add a nil node" unless child
     raise "Child #{child.name} already added!" if @children_hash.has_key?(child.name)
@@ -50,25 +49,43 @@ class ASTTree
     child.parent = self
     return child
   end
-  
+
   def type_check(type = nil)
-#    puts "Type Checking " + @node_type
-    case @node_type 
-      when "TypeInt", "TypeFloat"
-        puts "TYPE FOUND: " + @content
-        return @content
-      when "Variable" 
-        puts "Variable: " + (@content.to_s || " <Empty> ") + " " + (type ? type.to_s : " <NoType> ")
-        return type
-      when "VariableDeclaration"
-        children {|child| type = child.type_check(type)}
-        return type
-      else
-        children {|child| child.type_check(nil)}
-        return type
-     end
-   end
-  
+    case @node_type
+    when "TypeInt", "TypeFloat"
+      puts "TYPE FOUND: " + @content
+      return @content
+    when "IntegerLiteral"
+      puts "Found Int Literal"
+      return "int"
+    when "FloatLiteral"
+      puts "Found Float Literal"
+      return "float"
+    when "Variable"
+      if type
+        $symbol_table[@content] = type
+      end
+      puts "Variable: " + (@content.to_s || " <Empty> ") + " " + $symbol_table[@content].to_s
+      return type
+    when "VariableDeclaration"
+      children {|child| type = child.type_check(type)}
+      return type
+    when "Init"
+      children.each do |child|
+        t = child.type_check(nil)
+        if (type != t)
+          puts "Initialization error: Value is " + t.to_s + " Expected: " + type.to_s
+          raise "TYPE ERROR"
+        end
+      end
+      puts "Init Type:" + (type.to_s || " <Empty>")
+      return type
+    else
+      children {|child| type = child.type_check(nil)}
+      return type
+    end
+  end
+
   def print_tree(level = 0)
     if is_root?
       print "*"
@@ -84,12 +101,12 @@ class ASTTree
 
     children { |child| child.print_tree(level + 1)}
   end
-  
+
   def has_content?
     @content != nil
   end
 
-  def set_as_root!    
+  def set_as_root!
     @parent = nil
   end
 
@@ -100,20 +117,20 @@ class ASTTree
   def has_children?
     @children.length != 0
   end
-  
+
   def is_leaf?
     !has_children?
   end
-  
+
   def each(&block)             # :yields: node
     yield self
     children { |child| child.each(&block) }
   end
-  
+
   def each_leaf &block
     self.each { |node| yield(node) if node.is_leaf? }
   end
-  
+
   def [](name_or_index)
     raise ArgumentError, "Name_or_index needs to be provided!" if name_or_index == nil
 
@@ -159,33 +176,33 @@ class ASTTree
   end
 
   def self.json_create(json_hash)
-     begin
-       require 'json'
+    begin
+      require 'json'
 
-       node = new(json_hash["name"], json_hash["content"])
+      node = new(json_hash["name"], json_hash["content"])
 
-       json_hash["children"].each do |child|
-         node << child
-       end if json_hash["children"]
+      json_hash["children"].each do |child|
+        node << child
+      end if json_hash["children"]
 
-       return node
-     rescue LoadError => e
-       warn "The JSON gem couldn't be loaded. Due to this we cannot serialize the tree to a JSON representation."
-     end
-   end 
+      return node
+    rescue LoadError => e
+      warn "The JSON gem couldn't be loaded. Due to this we cannot serialize the tree to a JSON representation."
+    end
+  end
 
-   def insertion_range
-     max = @children.size
-     min = -(max+1)
-     min..max
-   end
-   
-   def children
-     if block_given?
-       @children.each {|child| yield child}
-     else
-       @children
-     end
-   end
+  def insertion_range
+    max = @children.size
+    min = -(max+1)
+    min..max
+  end
+
+  def children
+    if block_given?
+      @children.each {|child| yield child}
+    else
+      @children
+    end
+  end
 
 end

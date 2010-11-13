@@ -1,0 +1,9 @@
+int a, q, u, i;
+{
+	/* some new code structure */
+	int x[5], y[9];
+	int a, q, u, i;
+	float testing = 0.01e20;
+	q=((a+4)*(10/u)/i);
+}
+
