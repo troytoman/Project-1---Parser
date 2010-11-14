@@ -2,15 +2,19 @@ class ASTTree
   include Enumerable
 
   attr_reader :name
+  attr_reader :node_class
   attr_reader :node_type
   attr_accessor :content
   attr_reader   :parent
+#  attr_accessor :message
 
 
-  def initialize(name, node_type = nil, content = nil)
+  def initialize(name, node_class = nil, content = nil)
     raise ArgumentError, "Node name is required!" if name == nil
     @name, @content = name, content
-    @node_type = node_type.split("::").last
+    @node_class = node_class.split("::").last
+    #@node_type = nil
+
 
     self.set_as_root!
     @children_hash = Hash.new
@@ -20,7 +24,7 @@ class ASTTree
 
   def to_s
     "Node Name: #{@name}" +
-      " Node Type: " + (@node_type || "<Empty>") +
+      " Node Type: " + (@node_class || "<Empty>") +
       " Content: " + (@content || "<Empty>") +
       " Parent: " + (is_root?()  ? "<None>" : @parent.name) +
       " Children: #{@children.length}" +
@@ -51,26 +55,24 @@ class ASTTree
   end
 
   def type_check(type = nil)
-    case @node_type
+    case @node_class
     when "TypeInt", "TypeFloat"
-      #      puts "TYPE FOUND: " + @content
       return @content
     when "IntegerLiteral"
-      #      puts "Found Int Literal"
+      @node_type = "int"
       return "int"
     when "FloatLiteral"
-      #      puts "Found Float Literal"
+      @node_type = "float"
       return "float"
     when "Variable"
       content_hash = @content.split("[").first
       if type
         $symbol_table[content_hash] = type
       end
-      #      puts "Variable: " + (@content.to_s || " <Empty> ") + " Hash: " + content_hash + " " + $symbol_table[@content].to_s
       if !($symbol_table[content_hash])
-#        puts "Undeclared Variable: " + @content.to_s
         raise TypeError, "Undeclared Variable: " + @content.to_s
       end
+      @node_type = $symbol_table[content_hash]
       return $symbol_table[content_hash]
     when "VariableDeclaration"
       children {|child| type = child.type_check(type)}
@@ -79,24 +81,34 @@ class ASTTree
       children.each do |child|
         t = child.type_check(nil)
         if ((type == "int") && (type != t))
- #         puts "Initialization error: Value is " + t.to_s + " Expected: " + type.to_s
-          raise TypeError, "Initialization error: Value is: " + t.to_s + " Expected: " + type.to_s
+          raise TypeError, "Initialization Expression is: <Type:" + t.to_s + "> Expected was: <Type:" + type.to_s + ">"
         end
       end
-      #      puts "Init Type:" + (type.to_s || " <Empty>")
+      @node_type = type
+      return type
+    when "AssignmentExpression"
+      children.each do |child|
+        t = child.type_check(nil)
+        if (child == children.first)
+          type = t
+        end
+        if ((type == "int") && (type != t))
+          raise TypeError, "Assignment Expression is: <Type:" + t.to_s + "> Expected was: <Type:" + type.to_s + ">"
+        end
+      end
+      @node_type = type
       return type
     when "AddExpression", "MinusExpression", "DivExpression", "MultExpression", "ParenExpression"
       children.each do |child|
-        t = child.type_check(nil)
-        #        puts "Element of " + @node_type.to_s + " T: " + t.to_s
+        t = child.type_check(type)
         if ((type == "float") || (t == "float"))
           type = "float"
         else
-          type = t
+          type = "int"
         end
-        #        puts "Expression " + @node_type.to_s + " Type: " + type.to_s
-        return type
+        @node_type = type
       end
+      return type
     else
       children {|child| type = child.type_check(nil)}
       return type
@@ -105,7 +117,7 @@ class ASTTree
 
   def print_tree(level = 0)
     if is_root?
-      print "*"
+      print "\n*"
     else
       print "|" unless parent.is_root?
       print(' ' * (level - 1) * 4)
@@ -120,7 +132,7 @@ class ASTTree
       content_hash = nil
     end
 
-    puts " #{content}" + " <" + ($symbol_table[content_hash] || "NoType") + ">"
+    puts " #{content}" + " <Type: " + (@node_type || "no_type") + ">"
 
     children { |child| child.print_tree(level + 1)}
   end
@@ -184,6 +196,8 @@ class ASTTree
       json_hash = {
         "name"         => name,
         "content"      => content,
+        "node_type"    => node_type,
+        "node_class"   => node_class,
         JSON.create_id => self.class.name
       }
 
@@ -202,7 +216,7 @@ class ASTTree
     begin
       require 'json'
 
-      node = new(json_hash["name"], json_hash["content"])
+      node = new(json_hash["name"], json_hash["node_class"], json_hash["content"])
 
       json_hash["children"].each do |child|
         node << child

@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# Partial C parser 
+# Partial C parser
 # Troy Toman
 
 require './cparser.rb'
@@ -22,7 +22,21 @@ parseFile = File.new(filename, "r")
 
 parsestring = parseFile.read
 
-tree = parser.parse(parsestring)
-  
-  
+parse_result = parser.parse(parsestring)
+
+puts "RESULTS:" + parse_result.message
+if parse_result.ast
+  puts "Printing AST: \n"
+  parse_result.ast.print_tree
+  if parse_result.result
+    puts "\nCreating json format"
+    j = parse_result.ast.to_json
+    puts j
+    puts "\nCreating new AST from the json"
+    another_ast = JSON.parse(j)
+    another_ast.type_check
+    another_ast.print_tree
+  end
+end
+
 puts ("\n" * 2)

@@ -12,19 +12,24 @@ Treetop.load 'cparse'
 puts 'Loaded cparse grammar with no problems...'
 
 class Proj1Parser
-  attr_reader :message, :result
+  attr_reader :message, :result, :ast
 
   def initialize
     puts 'initializing'
     @cparser =  CparseParser.new
     $symbol_table = {}
+    @ast = nil
   end
 
   def parse (input)
     $symbol_table = {}
     $array_indicies = Array.new
-
-    puts "\n" + "TEST: " + input + "\n"
+    @ast = nil
+       
+#    puts "\n\n----------------- Parsing -----------------"
+#    puts "TEST INPUT: " + input
+#    puts "-------------- Begin Parsing --------------"
+    
 
     input.gsub!(/([^a-zA-Z0-9])\s*/,'\1')    #remove whitespace (except near IDs)
     input.gsub!(/\s*([^a-zA-Z0-9{}])/,'\1')
@@ -33,29 +38,31 @@ class Proj1Parser
     tree = @cparser.parse(input)
 
     if tree != nil
-      @message = "\nYes! I understand!\n\n"
+      @message = "\nYes! I understand!\n"
 #      puts @message
       self.get_indicies(tree)
       self.clean_tree(tree)
-      ast = tree.to_ast
-      if ast.kind_of?(Array)
+      @ast = tree.to_ast
+      if @ast.kind_of?(Array)
         ast_prime = ASTTree.new("Program", "Program", "Program")
-        ast.each  {|node| ast_prime<<node}
-        ast = ast_prime
+        @ast.each  {|node| ast_prime<<node}
+        @ast = ast_prime
       end
       begin
-        ast.type_check
+        @ast.type_check
         self.check_array_indicies
       rescue => error
-        @message = "\n\nNo, I don't understand."
-        puts @message
-        puts "!!!!!!! #{error.class}: #{error.message}\n\n"
-        ast.print_tree
-        return nil
+        @message = "\nNo, I don't understand.\n"
+#        puts @message
+        @message +=  "!!!!!!! #{error.class}: #{error.message}\n\n"
+#        ast.print_tree
+        @result = nil
+        return self
       end
-      puts @message
-      ast.print_tree
-      return ast
+#      puts @message
+#      ast.print_tree
+      @result = true
+      return self
     else
       @message = "\n\nNo, I don't understand.\n"
       unless @cparser.terminal_failures.empty?
@@ -64,7 +71,10 @@ class Proj1Parser
         @message += "I had a problem with line #{parser.failure_line} column #{parser.index+1}\n"
         @message += "To be honest, I was not expecting you to say anything more.\n"
       end
-      puts message
+#      puts message
+      @result = nil
+#      puts "Result: " + self.result.to_s
+      return self
     end
   end
 
@@ -94,7 +104,7 @@ class Proj1Parser
     $array_indicies.each do |index|
       if ($symbol_table[index] != "int")
 #        puts "Invalid array index: " + index + '\n'
-        raise TypeError, "Invalid array index: " + index + '\n'
+        raise TypeError, "Invalid array index: " + index + "\n"
       end
     end
   end

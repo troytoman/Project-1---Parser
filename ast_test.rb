@@ -10,32 +10,32 @@ describe CparseParser do
   
   
   it "should parse a float assignment declaration" do 
-    parser.parse("float a = 5.0;").should be_true
+    parser.parse("float a = 5.0;").result.should be_true
   end
   
   it "should not parse float assigned to an integer" do
-    parser.parse("int x, y, z = 5.0 + 1.07;").should_not be_true
+    parser.parse("int x, y, z = 5.0 + 1.07;").result.should_not be_true
   end
 
   it "should parse multiple float declarations" do
-    parser.parse("float a, b, c;").should be_true
+    parser.parse("float a, b, c;").result.should be_true
   end
   
   it "should do test right10" do
     parser.parse("int y, x;
     int z=y+10-4*(2/x*2)/y;
-    ").should be_true
+    ").result.should be_true
   end
   
   it "should do a complicated assignment" do
-    parser.parse("int x, z, y; z=y+10-4*(2/x*2)/y;").should be_true
+    parser.parse("int x, z, y; z=y+10-4*(2/x*2)/y;").result.should be_true
   end
  
   it "should do a complicated assignment" do
-    parser.parse("int y; int x = y + 5 / 10 * 3 - 20;").should be_true
+    parser.parse("int y; int x = y + 5 / 10 * 3 - 20;").result.should be_true
   end
   it "should do test right11" do
-    parser.parse("
+    ast = parser.parse("
     /*{
     	{*/
     		int y;
@@ -56,6 +56,8 @@ describe CparseParser do
 
     	/*}
     }*/
-        ").should be_true
+        ")
+    ast.result.should be_true
+    ast.ast.print_tree    
   end
 end

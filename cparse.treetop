@@ -1,5 +1,6 @@
 # a Treetop Grammar to parse a subset of the C language
-#
+# for CS5363 Programming Languages and Compilers - Fall 2010
+# Troy Toman
 
 grammar Cparse
 
