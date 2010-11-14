@@ -3,6 +3,9 @@ module Cparse
   require './ast.rb'
 
   class Treetop::Runtime::SyntaxNode
+    
+    # This method generates an AST node for a parse tree node.
+    # It is sometimes replaced by certain nodes that do not need to be in the AST
     def to_ast
       ast_subtree = ASTTree.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
       self.elements.each do |node|

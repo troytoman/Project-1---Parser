@@ -1,3 +1,7 @@
+# This is the class definition for an ASTTree. It borrows from rubytree.
+# In it's current implementation, node classes are just based on a field. 
+# I would like to create actual subclasses in a future implementation
+
 class ASTTree
   include Enumerable
 
@@ -6,7 +10,6 @@ class ASTTree
   attr_reader :node_type
   attr_accessor :content
   attr_reader   :parent
-#  attr_accessor :message
 
 
   def initialize(name, node_class = nil, content = nil)
@@ -54,33 +57,34 @@ class ASTTree
     return child
   end
 
+# This is the function for validating type
   def type_check(type = nil)
     case @node_class
-    when "TypeInt", "TypeFloat"
+    when "TypeInt", "TypeFloat"   #Recognizes a "type" definition and passes back to VariableDeclaration
       return @content
-    when "IntegerLiteral"
+    when "IntegerLiteral"         #Sets type for a integer literal
       @node_type = "int"
       return "int"
-    when "FloatLiteral"
+    when "FloatLiteral"           #Sets type for a float literal
       @node_type = "float"
       return "float"
-    when "Variable"
+    when "Variable"               
       content_hash = @content.split("[").first
-      if type
-        $symbol_table[content_hash] = type
+      if type                                   #Leverages an inherited type definition for unseen variables
+        $symbol_table[content_hash] = type      #Store the inherited type in the symbol table
       end
-      if !($symbol_table[content_hash])
+      if !($symbol_table[content_hash])         #Looks up the type in the symbol table for existing variables
         raise TypeError, "Undeclared Variable: " + @content.to_s
       end
       @node_type = $symbol_table[content_hash]
       return $symbol_table[content_hash]
-    when "VariableDeclaration"
+    when "VariableDeclaration"                  #Gets and then passes on the type for the declaration
       children {|child| type = child.type_check(type)}
       return type
     when "Init"
       children.each do |child|
         t = child.type_check(nil)
-        if ((type == "int") && (type != t))
+        if ((type == "int") && (type != t))     #Validates that we are not initializing an int w/float
           raise TypeError, "Initialization Expression is: <Type:" + t.to_s + "> Expected was: <Type:" + type.to_s + ">"
         end
       end
@@ -92,7 +96,7 @@ class ASTTree
         if (child == children.first)
           type = t
         end
-        if ((type == "int") && (type != t))
+        if ((type == "int") && (type != t))     #Validates that we are not assigning an int w/float
           raise TypeError, "Assignment Expression is: <Type:" + t.to_s + "> Expected was: <Type:" + type.to_s + ">"
         end
       end
@@ -101,8 +105,8 @@ class ASTTree
     when "AddExpression", "MinusExpression", "DivExpression", "MultExpression", "ParenExpression"
       children.each do |child|
         t = child.type_check(type)
-        if ((type == "float") || (t == "float"))
-          type = "float"
+        if ((type == "float") || (t == "float"))  #gathers the type info for operators
+          type = "float"                          #if one term is float all is considered float
         else
           type = "int"
         end
@@ -115,6 +119,7 @@ class ASTTree
     end
   end
 
+# This method enables printing and AST to the screen
   def print_tree(level = 0)
     if is_root?
       print "\n*"
@@ -189,6 +194,8 @@ class ASTTree
   def marshal_dump
     self.collect { |node| node.create_dump_rep }
   end
+  
+# This method creates a json representation of an ASTTree  
   def to_json(*a)
     begin
       require 'json'
@@ -212,6 +219,9 @@ class ASTTree
     end
   end
 
+# This method is used to create a new ASTTree from a json hash. 
+# usage is:
+# another_ast = JSON.parse(j)   
   def self.json_create(json_hash)
     begin
       require 'json'

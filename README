@@ -34,12 +34,14 @@ INSTALLATION INSTRUCTIONS
 
 You will be prompted for an input file. I have provided "testinput.c" which contains the sample input from the project specification. I have also included "badtestinput.c" which has a syntax error and will be rejected by the parser.
 
+In this version of the program, a json file will be output in addition to printing out the tree on the screen. The json output will then generate a new tree which will be also printed.
+
 CURRENT STATE OF THE COMPILER
 
 	- The project is complete as specified.
 	- Type checking will validate int variables are not assigned a float value. 
 	- Type checking does allow float variables to be assigned integer values
-	- Type checking also validates that only integers are used as array indicies
+	- Type checking also validates that only integers are used as array indices
 	- Known bugs: None known. 
 
 PROJECT TESTING
