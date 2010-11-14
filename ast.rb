@@ -73,7 +73,7 @@ class ASTTree
     when "Init"
       children.each do |child|
         t = child.type_check(nil)
-        if (type != t)
+        if ((type == "int") && (type != t))
           puts "Initialization error: Value is " + t.to_s + " Expected: " + type.to_s
           raise "TYPE ERROR"
         end

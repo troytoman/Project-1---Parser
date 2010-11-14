@@ -47,7 +47,6 @@ class Proj1Parser
       rescue
         puts "Type Error\n\n"
         ast.print_tree
-        
         return nil
       end
       ast.print_tree

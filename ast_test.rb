@@ -13,7 +13,7 @@ describe CparseParser do
     parser.parse("float a = 5.0;").should be_true
   end
   
-  it "should not parse multiple int declarations" do
+  it "should not parse float assigned to an integer" do
     parser.parse("int x, y, z = 5.0 + 1.07;").should_not be_true
   end
 
@@ -25,6 +25,14 @@ describe CparseParser do
     parser.parse("int y, x;
     int z=y+10-4*(2/x*2)/y;
     ").should be_true
+  end
+  
+  it "should do a complicated assignment" do
+    parser.parse("z=y+10-4*(2/x*2)/y;").should be_true
+  end
+ 
+  it "should do a complicated assignment" do
+    parser.parse("int x = y + 5 / 10 * 3 - 20;").should be_true
   end
   
 end

@@ -8,9 +8,9 @@ grammar Cparse
   end
   rule statement
       var_decl 
-    / "if" '(' expr ')' then_statement "else " statement <IfThenElse>
-    / "if" '(' expr ')' statement        <IfThen>
-    / "while" '(' expr ')' statement     <While>
+    / "if" '(' ex ')' then_statement "else " statement <IfThenElse>
+    / "if" '(' ex ')' statement        <IfThen>
+    / "while" '(' ex ')' statement     <While>
     / other_statement 
   end
   rule var_decl
@@ -67,7 +67,7 @@ grammar Cparse
     / ('[' id ']')
   end
   rule init
-    '=' expr <Init>
+    '=' ex <Init>
   end
   rule var_list
     ',' varitem var_list? <VarList>
@@ -76,60 +76,103 @@ grammar Cparse
     '{' statement_list ' '* '}' <Block>
   end
   rule then_statement
-       ("if" '(' expr ')' then_statement "else" then_statement )
-    /  ("while" '(' expr ')' then_statment ) 
+       "if" '(' ex ')' then_statement "else" then_statement
+    /  "while" '(' ex ')' then_statment 
     / other_statement
   end
   rule other_statement
       block
-    / expr ';' <Statement>
-  end
-  rule expr
-      var '=' expr <AssignmentExpression>
-    / or_expr
-  end
-  rule or_expr
-      value '||' and_expr <OrExpression>
-    / and_expr
+    / ex ';' <Statement>
   end
 
+  rule ex
+    expr / or
+  end
+
+  rule expr
+      or '=' ex <AssignmentExpression>
+#    / or_expr
+  end
+  
+  rule or
+    or_expr / and
+  end
+
+  rule or_expr
+      and '||' or <OrExpression>
+#    / and_expr
+  end
+
+  rule and
+    and_expr / equate
+  end 
+
   rule and_expr
-      value '&&' value <AndExpression>
-    / equate_expr
+      equate '&&' and <AndExpression>
+#    / equate_expr
+  end
+
+  rule equate
+    equate_expr / comp
   end
 
   rule equate_expr
-      value '==' value <EquateExpression>
-    / compare_expr
+      comp '==' equate <EquateExpression>
+#    / compare_expr
+  end
+
+  rule comp
+    compare_expr / term
   end
 
   rule compare_expr
-      value '<' value <LTExpression>
-    / value '>' value <GTExpression>
-    / add_expr
+      term '<' comp <LTExpression>
+    / term '>' comp <GTExpression>
+#    / add_expr
+  end
+
+  rule term
+    add_expr / factor
   end
 
   rule add_expr
-      value '+' expr <AddExpression>
-    / value '-' expr <MinusExpression>
-    / mult_expr
+      factor '+' term <AddExpression>
+    / factor '-' term <MinusExpression>
+#    / mult_expr
+  end
+
+  rule factor
+    mult_expr / unary
   end
 
   rule mult_expr
-      value '/' expr <DivExpression>
-    / value '*' expr <MultExpression>
-    / unary_expr
+      unary '/' factor <DivExpression>
+    / unary '*' factor <MultExpression>
+#    / unary_expr
+  end
+
+  rule unary
+    unary_expr / group
   end
 
   rule unary_expr
-      '!' expr  <NotExpression>
-    / value
+      '!' unary  <NotExpression>
+#    / value
+  end
+  
+  rule group
+    paren / value
+  end
+
+  rule paren 
+    '(' or ')' <ParenExpression>
   end
 
   rule value
       var
     / fval
-    / '(' expr ')' <ParenExpression>
+    / ival
+#    / '(' ex ')' <ParenExpression>
   end
 end
 
