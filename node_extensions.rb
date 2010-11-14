@@ -290,6 +290,20 @@ module Cparse
     end
   end
 
+  class ArrayVariableIndex < Treetop::Runtime::SyntaxNode
+    def initialize(input, interval, elements = nil)
+      super(input, interval, elements)
+      @nodedisplay = self.text_value.gsub!(/[\[\]]/, '')
+    end
+    def to_array
+      return self.text_value
+    end
+    def printout
+      puts ' ' * @interval.first + self.text_value
+      self.elements.map {|x| x.printout}
+    end
+  end
+  
   class GTExpression < Treetop::Runtime::SyntaxNode
     def initialize(input, interval, elements = nil)
       super(input, interval, elements)

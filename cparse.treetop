@@ -36,7 +36,7 @@ grammar Cparse
     [0-9]
   end
   rule nat
-    digit digit* #<IntegerLiteral>
+    digit digit* 
   end
   rule ival
       digit digit*  <IntegerLiteral>
@@ -49,7 +49,7 @@ grammar Cparse
     / ival 
   end
   rule id
-    (!keyword [a-zA-Z_] ) [a-zA-Z_0-9]* #<Identifier>
+    (!keyword [a-zA-Z_] ) [a-zA-Z_0-9]* #<Variable>
   end
   rule keyword
     "if"
@@ -60,11 +60,11 @@ grammar Cparse
   / "float"
   end
   rule var
-    id array* <Variable>
+      id array* <Variable>
   end
   rule array 
-      ('[' ival ']') 
-    / ('[' id ']')
+      '[' ival ']' 
+    / '[' id ']' <ArrayVariableIndex>
   end
   rule init
     '=' ex <Init>

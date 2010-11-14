@@ -21,6 +21,8 @@ class Proj1Parser
   end
 
   def parse (input)
+    $symbol_table = {}
+    $array_indicies = Array.new
 
     puts "\n" + "TEST: " + input + "\n"
 
@@ -28,14 +30,14 @@ class Proj1Parser
     input.gsub!(/\s*([^a-zA-Z0-9{}])/,'\1')
     input.gsub!(/\/\*(([^\*])|(\*[^\/]))*\*\//,'')
 
-    #    puts input
     tree = @cparser.parse(input)
 
     if tree != nil
       @message = "\nYes! I understand!\n\n"
       puts @message
+      self.get_indicies(tree)
+      puts "ARRAY INDEX: "+ $array_indicies.uniq!.to_s
       self.clean_tree(tree)
-      #    tree.printout
       ast = tree.to_ast
       if ast.kind_of?(Array)
         ast_prime = ASTTree.new("Program", "Program")
@@ -44,6 +46,7 @@ class Proj1Parser
       end
       begin
         ast.type_check
+        self.check_array_indicies
       rescue
         puts "Type Error\n\n"
         ast.print_tree
@@ -51,7 +54,6 @@ class Proj1Parser
       end
       ast.print_tree
       return ast
-    #     true
     else
       @message = "No, I don't understand.\n"
       unless @cparser.terminal_failures.empty?
@@ -61,14 +63,12 @@ class Proj1Parser
         @message += "To be honest, I was not expecting you to say anything more.\n"
       end
       puts message
-      #     false
     end
   end
 
   def clean_tree(root_node)
     return if(root_node.elements.nil?)
     root_node.elements.delete_if{|node| node.class.name == "Treetop::Runtime::SyntaxNode" }
-    #   root_node.elements.each {|node| node.class.name == "Cparse::VarList"}
     root_node.elements.each {|node| self.clean_tree(node) }
   end
 
@@ -76,5 +76,24 @@ class Proj1Parser
     ast_subtree = Tree::TreeNode.new(root_node.class.name)
     root_node.elements.each {|node| ast_subtree<<build_ast(node) }
     ast_subtree
+  end
+
+  def get_indicies(root_node)
+    return if(root_node.elements.nil?)
+    root_node.elements.each do |node|
+      if (node.class.name == "Cparse::ArrayVariableIndex")
+        $array_indicies << node.text_value.gsub!(/[\[\]]/, '')
+      end
+      self.get_indicies(node)
+    end
+  end
+  
+  def check_array_indicies
+    $array_indicies.each do |index|
+      if ($symbol_table[index] != "int")
+        puts "Invalid array index: " + index
+        raise "TYPE ERROR"
+      end
+    end
   end
 end

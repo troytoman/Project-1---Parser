@@ -62,11 +62,16 @@ class ASTTree
       puts "Found Float Literal"
       return "float"
     when "Variable"
+      content_hash = @content.split("[").first
       if type
-        $symbol_table[@content] = type
+        $symbol_table[content_hash] = type
       end
-      puts "Variable: " + (@content.to_s || " <Empty> ") + " " + $symbol_table[@content].to_s
-      return type
+      puts "Variable: " + (@content.to_s || " <Empty> ") + " Hash: " + content_hash + " " + $symbol_table[@content].to_s
+      if !($symbol_table[content_hash])
+        puts "Undeclared Variable: " + @content.to_s
+        raise "Undeclared Variable"
+      end
+      return $symbol_table[content_hash]
     when "VariableDeclaration"
       children {|child| type = child.type_check(type)}
       return type
@@ -80,6 +85,18 @@ class ASTTree
       end
       puts "Init Type:" + (type.to_s || " <Empty>")
       return type
+    when "AddExpression", "MinusExpression", "DivExpression", "MultExpression", "ParenExpression"
+      children.each do |child|
+        t = child.type_check(nil)
+        puts "Element of " + @node_type.to_s + " T: " + t.to_s
+        if ((type == "float") || (t == "float"))
+          type = "float"
+        else
+          type = t
+        end
+        puts "Expression " + @node_type.to_s + " Type: " + type.to_s
+        return type
+      end
     else
       children {|child| type = child.type_check(nil)}
       return type

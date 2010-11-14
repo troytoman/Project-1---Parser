@@ -73,83 +73,83 @@ describe CparseParser do
   end
  
   it "should parse assignment expressions" do
-    parser.parse("a = 5;").should be_true
+    parser.parse("int a; a = 5;").should be_true
   end
 
   it "should not parse invalid assignment expressions" do
-    parser.parse("a5 =;").should_not be_true
+    parser.parse("int a5; a5 =;").should_not be_true
   end
 
   it "should parse if statements" do
-    parser.parse("if (1) c=b;").should be_true
+    parser.parse("int c,b; if (1) c=b;").should be_true
   end
   
   it "should not parse invalid if statements" do
-    parser.parse("if (1 c=b;").should_not be_true
+    parser.parse("int c,b; if (1 c=b;").should_not be_true
   end
  
   it "should parse if-else statements" do
-    parser.parse("if (1) c=b; else c=a;").should be_true
+    parser.parse("int a,c,b; if (1) c=b; else c=a;").should be_true
   end
   
   it "should not parse invalid if-else statements" do
-    parser.parse("if (1) c=b; els c=a; ").should_not be_true
+    parser.parse("int a, b, c; if (1) c=b; els c=a; ").should_not be_true
   end
   
   it "should parse while statements" do
-    parser.parse("while (a < b) a = a + 1;").should be_true
+    parser.parse("int a, b; while (a < b) a = a + 1;").should be_true
   end
 
   it "should parse equivalence expressions" do
-    parser.parse("if (a == 5) a = a +1;").should be_true
+    parser.parse("int a; if (a == 5) a = a +1;").should be_true
   end  
   
   it "should parse less_than expressions" do
-    parser.parse("if (a < 5) a = a + 1;").should be_true
+    parser.parse("int a; if (a < 5) a = a + 1;").should be_true
   end
   
   it "should parse greater_than expressions" do
-    parser.parse("{if (a > 5) a = a + 1;}").should be_true
+    parser.parse("int a; {if (a > 5) a = a + 1;}").should be_true
   end
    
   it "should parse addition expressions" do
-    parser.parse("a = a + 5;").should be_true
+    parser.parse("int a; a = a + 5;").should be_true
   end
 
   it "should parse subtraction expressions" do
-    parser.parse("a = a - 5;").should be_true
+    parser.parse("int a; a = a - 5;").should be_true
   end
   
   it "should parse multiply expressions" do
-    parser.parse("a = a * 2;").should be_true
+    parser.parse("int a; a = a * 2;").should be_true
   end
   
   it "should parse divide expressions" do
-    parser.parse("a = a / 5;").should be_true
+    parser.parse("int a; a = a / 5;").should be_true
   end
   
   it "should parse AND expressions" do
-    parser.parse("if (a && 5) a = a + 1;").should be_true
+    parser.parse("int a;  if (a && 5) a = a + 1;").should be_true
   end
   
   it "should parse NOT expressions" do
-    parser.parse("if (!(a > 5)) a = a + 1;").should be_true
+    parser.parse("int a; if (!(a > 5)) a = a + 1;").should be_true
   end
   
   it "should parse OR expressions" do
-    parser.parse("if (a || 5) a = a + 1;").should be_true
+    parser.parse("int a; if (a || 5) a = a + 1;").should be_true
   end
   
   it "should not parse an invalid OR expression" do
-    parser.parse("if (a ||) a = a + 1").should_not be_true
+    parser.parse("int a; if (a ||) a = a + 1").should_not be_true
   end
   
   it "should parse block statements" do
-    parser.parse("{a = b + c; d = a * 2;}").should be_true
+    parser.parse("int a,b,c,d; {a = b + c; d = a * 2;}").should be_true
   end
 
   it "should not parse invalid block statements" do
-    parser.parse("{a = b + c; d = a * 2;").should_not be_true
+    parser.parse("int a,b,c,d; {a = b + c; d = a * 2;").should_not be_true
   end
   
   it "should parse the test input" do
