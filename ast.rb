@@ -53,23 +53,23 @@ class ASTTree
   def type_check(type = nil)
     case @node_type
     when "TypeInt", "TypeFloat"
-      puts "TYPE FOUND: " + @content
+      #      puts "TYPE FOUND: " + @content
       return @content
     when "IntegerLiteral"
-      puts "Found Int Literal"
+      #      puts "Found Int Literal"
       return "int"
     when "FloatLiteral"
-      puts "Found Float Literal"
+      #      puts "Found Float Literal"
       return "float"
     when "Variable"
       content_hash = @content.split("[").first
       if type
         $symbol_table[content_hash] = type
       end
-      puts "Variable: " + (@content.to_s || " <Empty> ") + " Hash: " + content_hash + " " + $symbol_table[@content].to_s
+      #      puts "Variable: " + (@content.to_s || " <Empty> ") + " Hash: " + content_hash + " " + $symbol_table[@content].to_s
       if !($symbol_table[content_hash])
-        puts "Undeclared Variable: " + @content.to_s
-        raise "Undeclared Variable"
+#        puts "Undeclared Variable: " + @content.to_s
+        raise TypeError, "Undeclared Variable: " + @content.to_s
       end
       return $symbol_table[content_hash]
     when "VariableDeclaration"
@@ -79,22 +79,22 @@ class ASTTree
       children.each do |child|
         t = child.type_check(nil)
         if ((type == "int") && (type != t))
-          puts "Initialization error: Value is " + t.to_s + " Expected: " + type.to_s
-          raise "TYPE ERROR"
+ #         puts "Initialization error: Value is " + t.to_s + " Expected: " + type.to_s
+          raise TypeError, "Initialization error: Value is: " + t.to_s + " Expected: " + type.to_s
         end
       end
-      puts "Init Type:" + (type.to_s || " <Empty>")
+      #      puts "Init Type:" + (type.to_s || " <Empty>")
       return type
     when "AddExpression", "MinusExpression", "DivExpression", "MultExpression", "ParenExpression"
       children.each do |child|
         t = child.type_check(nil)
-        puts "Element of " + @node_type.to_s + " T: " + t.to_s
+        #        puts "Element of " + @node_type.to_s + " T: " + t.to_s
         if ((type == "float") || (t == "float"))
           type = "float"
         else
           type = t
         end
-        puts "Expression " + @node_type.to_s + " Type: " + type.to_s
+        #        puts "Expression " + @node_type.to_s + " Type: " + type.to_s
         return type
       end
     else
@@ -114,7 +114,13 @@ class ASTTree
       print(has_children? ? "+" : ">")
     end
 
-    puts " #{content}"
+    if content
+      content_hash = content.split("[").first
+    else
+      content_hash = nil
+    end
+
+    puts " #{content}" + " <" + ($symbol_table[content_hash] || "NoType") + ">"
 
     children { |child| child.print_tree(level + 1)}
   end

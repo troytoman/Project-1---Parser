@@ -34,28 +34,30 @@ class Proj1Parser
 
     if tree != nil
       @message = "\nYes! I understand!\n\n"
-      puts @message
+#      puts @message
       self.get_indicies(tree)
-      puts "ARRAY INDEX: "+ $array_indicies.uniq!.to_s
       self.clean_tree(tree)
       ast = tree.to_ast
       if ast.kind_of?(Array)
-        ast_prime = ASTTree.new("Program", "Program")
+        ast_prime = ASTTree.new("Program", "Program", "Program")
         ast.each  {|node| ast_prime<<node}
         ast = ast_prime
       end
       begin
         ast.type_check
         self.check_array_indicies
-      rescue
-        puts "Type Error\n\n"
+      rescue => error
+        @message = "\n\nNo, I don't understand."
+        puts @message
+        puts "!!!!!!! #{error.class}: #{error.message}\n\n"
         ast.print_tree
         return nil
       end
+      puts @message
       ast.print_tree
       return ast
     else
-      @message = "No, I don't understand.\n"
+      @message = "\n\nNo, I don't understand.\n"
       unless @cparser.terminal_failures.empty?
         @message += @cparser.failure_reason
       else
@@ -91,8 +93,8 @@ class Proj1Parser
   def check_array_indicies
     $array_indicies.each do |index|
       if ($symbol_table[index] != "int")
-        puts "Invalid array index: " + index
-        raise "TYPE ERROR"
+#        puts "Invalid array index: " + index + '\n'
+        raise TypeError, "Invalid array index: " + index + '\n'
       end
     end
   end
