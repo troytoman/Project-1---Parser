@@ -32,10 +32,10 @@ if parse_result.ast
     puts "\nCreating json format"
     j = parse_result.ast.to_json
     puts j
-    puts "\nCreating new AST from the json"
-    another_ast = JSON.parse(j)
-    another_ast.type_check
-    another_ast.print_tree
+#    puts "\nCreating new AST from the json"
+#    another_ast = JSON.parse(j)
+#    another_ast.type_check
+#    another_ast.print_tree
   end
 end
 
