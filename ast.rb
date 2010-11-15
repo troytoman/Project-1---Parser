@@ -1,6 +1,48 @@
-# This is the class definition for an ASTTree. It borrows from rubytree.
-# In it's current implementation, node classes are just based on a field. 
+# This is the class definition for an ASTTree. It is based on rubytree.
+# In it's current implementation, node classes are just based on a field.
 # I would like to create actual subclasses in a future implementation
+
+# tree.rb was the starting point for much of the ASTTree definition
+# I'm including the copyright for this work as acknowledgement
+#
+# = tree.rb - Generic implementation of an N-ary tree data structure.
+#
+# Provides a generic tree data structure with ability to
+# store keyed node elements in the tree.  This implementation
+# mixes in the Enumerable module.
+#
+# Author:: Anupam Sengupta (anupamsg@gmail.com)
+#
+
+# Copyright (c) 2006, 2007, 2008, 2009, 2010 Anupam Sengupta
+#
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#
+# - Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+#
+# - Redistributions in binary form must reproduce the above copyright notice, this
+#   list of conditions and the following disclaimer in the documentation and/or
+#   other materials provided with the distribution.
+#
+# - Neither the name of the organization nor the names of its contributors may
+#   be used to endorse or promote products derived from this software without
+#   specific prior written permission.
+#
+#   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
 
 class ASTTree
   include Enumerable
@@ -13,11 +55,9 @@ class ASTTree
 
 
   def initialize(name, node_class = nil, content = nil)
-    raise ArgumentError, "Node name is required!" if name == nil
+    raise ArgumentError, "Name is required!" if name == nil
     @name, @content = name, content
     @node_class = node_class.split("::").last
-    #@node_type = nil
-
 
     self.set_as_root!
     @children_hash = Hash.new
@@ -32,7 +72,7 @@ class ASTTree
       " Parent: " + (is_root?()  ? "<None>" : @parent.name) +
       " Children: #{@children.length}" +
       " Total Nodes: #{size()}"
-      end
+  end
 
   def parent=(parent)         # :nodoc:
     @parent = parent
@@ -57,7 +97,7 @@ class ASTTree
     return child
   end
 
-# This is the function for validating type
+  # This is the function for validating type
   def type_check(type = nil)
     case @node_class
     when "TypeInt", "TypeFloat"   #Recognizes a "type" definition and passes back to VariableDeclaration
@@ -68,7 +108,7 @@ class ASTTree
     when "FloatLiteral"           #Sets type for a float literal
       @node_type = "float"
       return "float"
-    when "Variable"               
+    when "Variable"
       content_hash = @content.split("[").first
       if type                                   #Leverages an inherited type definition for unseen variables
         $symbol_table[content_hash] = type      #Store the inherited type in the symbol table
@@ -119,7 +159,7 @@ class ASTTree
     end
   end
 
-# This method enables printing and AST to the screen
+  # This method enables printing and AST to the screen
   def print_tree(level = 0)
     if is_root?
       print "\n*"
@@ -194,8 +234,8 @@ class ASTTree
   def marshal_dump
     self.collect { |node| node.create_dump_rep }
   end
-  
-# This method creates a json representation of an ASTTree  
+
+  # This method creates a json representation of an ASTTree
   def to_json(*a)
     begin
       require 'json'
@@ -219,9 +259,9 @@ class ASTTree
     end
   end
 
-# This method is used to create a new ASTTree from a json hash. 
-# usage is:
-# another_ast = JSON.parse(j)   
+  # This method is used to create a new ASTTree from a json hash.
+  # usage is:
+  # another_ast = JSON.parse(j)
   def self.json_create(json_hash)
     begin
       require 'json'
