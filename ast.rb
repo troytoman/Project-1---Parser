@@ -238,7 +238,7 @@ class ASTTree
   # This method creates a json representation of an ASTTree
   def to_json(*a)
     begin
-      require 'json'
+      require 'json/pure'
 
       json_hash = {
         "name"         => name,
@@ -264,7 +264,7 @@ class ASTTree
   # another_ast = JSON.parse(j)
   def self.json_create(json_hash)
     begin
-      require 'json'
+      require 'json/pure'
 
       node = new(json_hash["name"], json_hash["node_class"], json_hash["content"])
 
