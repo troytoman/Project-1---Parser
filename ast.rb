@@ -153,7 +153,32 @@ class ASTTree
         @node_type = type
       end
       return type
-    else
+    when "EquateExpression"
+      type = nil
+      children.each do |child|
+        t = child.type_check(nil)
+        if type 
+          if ((type != t) && (child.node_class != "IntegerLiteral")) 
+            raise TypeError, "Using equate expression for: <Type:" + t.to_s + "> and: <Type:" + type.to_s + ">"
+          end
+        else
+          if child.node_class != "IntegerLiteral"
+            type = t
+          end
+        end
+        @node_type = type
+      end
+      return "int"
+      when "NotExpression"
+        children.each do |child|
+        
+          t = child.type_check(nil)
+          if (t == "float")
+            raise TypeError, "Can't use float operands with a ! operator."
+          end
+        end  
+      return type
+      else
       children {|child| type = child.type_check(nil)}
       return type
     end

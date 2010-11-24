@@ -10,326 +10,326 @@ describe CparseParser do
 
   it "should parse an int declaration" do
     ast = parser.parse("int a;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should not parse an invalid int declaration" do
     ast = parser.parse("int a")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not parse assignment of invalid ids" do
     ast = parser.parse("int a:34;")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should parse a float declaration" do
     ast = parser.parse("float a;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should not parse an invalid float declaration" do
     ast = parser.parse("float a,;")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should parse an int assignment declaration" do
     ast = parser.parse("int a = 5;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should not parse an invalid int assignment" do
     ast = parser.parse("int a5 = ;")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should parse a float assignment declaration" do
     ast = parser.parse("float a = 5.0;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should parse a float assignment using an exponent -e notation" do
     ast = parser.parse("float a = 2.3e-3;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should parse a float assignment using an exponent -E notation" do
     ast = parser.parse("float a = 5E2;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should not parse an invalid float assignment declaration" do
     ast = parser.parse("float a = 5.0.0;")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should parse multiple int declarations" do
     ast = parser.parse("int x, y, z;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should not parse invalid multiple int declarations" do
     ast = parser.parse("int x, y z;")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should parse multiple float declarations" do
     ast = parser.parse("float a, b, c;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should parse array declarations" do
     ast = parser.parse("float arr[100], arr2[100][50];")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should not parse an invalid array declarations" do
     ast = parser.parse("float arr[100]arr2[100][50];")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should parse assignment expressions" do
     ast = parser.parse("int a; a = 5;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should not parse invalid assignment expressions" do
     ast = parser.parse("int a5; a5 =;")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should parse if statements" do
     ast = parser.parse("int c,b; if (1) c=b;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should not parse invalid if statements" do
     ast = parser.parse("int c,b; if (1 c=b;")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should parse if-else statements" do
     ast = parser.parse("int a,c,b; if (1) c=b; else c=a;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should not parse invalid if-else statements" do
     ast = parser.parse("int a, b, c; if (1) c=b; els c=a; ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should parse while statements" do
     ast = parser.parse("int a, b; while (a < b) a = a + 1;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should parse equivalence expressions" do
     ast = parser.parse("int a; if (a == 5) a = a +1;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should parse less_than expressions" do
     ast = parser.parse("int a; if (a < 5) a = a + 1;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should parse greater_than expressions" do
     ast = parser.parse("int a; {if (a > 5) a = a + 1;}")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should parse addition expressions" do
     ast = parser.parse("int a; a = a + 5;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should parse subtraction expressions" do
     ast = parser.parse("int a; a = a - 5;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should parse multiply expressions" do
     ast = parser.parse("int a; a = a * 2;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should parse divide expressions" do
     ast = parser.parse("int a; a = a / 5;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should parse AND expressions" do
     ast = parser.parse("int a;  if (a && 5) a = a + 1;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should parse NOT expressions" do
     ast = parser.parse("int a; if (!(a > 5)) a = a + 1;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should parse OR expressions" do
     ast = parser.parse("int a; if (a || 5) a = a + 1;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should not parse an invalid OR expression" do
     ast = parser.parse("int a; if (a ||) a = a + 1")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should parse block statements" do
     ast = parser.parse("int a,b,c,d; {a = b + c; d = a * 2;}")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should not parse invalid block statements" do
     ast = parser.parse("int a,b,c,d; {a = b + c; d = a * 2;")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should parse the test input" do
@@ -351,41 +351,41 @@ describe CparseParser do
         } 
         i = i + 1;
       }")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should do test right3" do
     ast = parser.parse(
       "float foo = 1, Bar = .1, BAZ = 0.8, foo_bar=-.8, _foo42=-0.1, _=4000000, UuUu=5e2;
       int _test;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should do test right4" do
     ast = parser.parse(
     "float a, v, d, t, test_test56=4.4e-2, _foo=.4e-2, yy=5E10;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should do test right5" do
     ast = parser.parse("int /**some comments(*^^$%@$+_0=***/x=0;")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should do test right6" do
@@ -398,11 +398,11 @@ describe CparseParser do
        	y=y;
        }
        ")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should do test right7" do
@@ -421,11 +421,11 @@ describe CparseParser do
        }
 
        ")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should do test right8" do
@@ -434,11 +434,11 @@ describe CparseParser do
        	x=x+1;
 
        ")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should do test right9" do
@@ -452,22 +452,22 @@ describe CparseParser do
        }
 
        ")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should do test right10" do
     ast = parser.parse("int y, x;
        int z=y+10-4*(2/x*2)/y;
        ")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should do test right11" do
@@ -492,11 +492,11 @@ describe CparseParser do
        	/*}
        }*/
            ")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should do test right21" do
@@ -512,11 +512,11 @@ describe CparseParser do
             	x=1;
             }
             ")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should do test right22" do
@@ -524,143 +524,143 @@ describe CparseParser do
      x=((((((((((((((((((((test*10))))))))))+((20))))))))))));
 
      ")
-    ast.result.should be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should be_true
   end
 
   it "should not do test wrong1" do
     ast = parser.parse("test i;
     ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong2" do
     ast = parser.parse("INT i;
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong3" do
     ast = parser.parse("int for;
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong4" do
     ast = parser.parse("int while;
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong5" do
     ast = parser.parse("int 2
    float x;
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong6" do
     ast = parser.parse("int 2
    float x;
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong7" do
     ast = parser.parse("int x y;
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong8" do
     ast = parser.parse("int $one;
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong9" do
     ast = parser.parse("int #one
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong10" do
     ast = parser.parse("int #one
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong11" do
     ast = parser.parse("int x{};
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong12" do
     ast = parser.parse("int v{4};
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong13" do
     ast = parser.parse("int x[4][][4];
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong14" do
@@ -670,11 +670,11 @@ describe CparseParser do
    y=0;
    }
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong15" do
@@ -683,41 +683,41 @@ describe CparseParser do
    	/*commented}*/
 
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong16" do
     ast = parser.parse("x=9+0-8*6/5tst_10*10;
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong17" do
     ast = parser.parse("c=9(4);
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong18" do
     ast = parser.parse("x=while+10;
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong19" do
@@ -726,30 +726,30 @@ describe CparseParser do
    	x=x;
    }
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not do test wrong20" do
     ast = parser.parse("( a = 0; b ) = 0;
    ")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not parse an attempt to assign float values to an integer" do
     ast = parser.parse("int x, y, z = 5.0 + 1.07;")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not parse an integer using a float index" do
@@ -757,20 +757,20 @@ describe CparseParser do
 	int t[10][10][10], s[10][10][10];
 	int a[10];
 	t[r][r][r] = t[r][r][r] ==s[r][r][r];")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
   it "should not parse an attempt to declare an array with a float index" do
     ast = parser.parse("int a[10][10.1];")
-    ast.result.should_not be_true
     puts ast.message
     if ast.ast
       ast.ast.print_tree
     end
+    ast.result.should_not be_true
   end
 
 end

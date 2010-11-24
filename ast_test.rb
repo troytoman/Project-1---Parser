@@ -28,36 +28,37 @@ describe CparseParser do
   end
   
   it "should do a complicated assignment" do
-    parser.parse("int x, z, y; z=y+10-4*(2/x*2)/y;").result.should be_true
+    parser.parse("int x, z, y; z=y+1-4*(2/x*2)/y;").result.should be_true
   end
  
   it "should do a complicated assignment" do
     parser.parse("int y; int x = y + 5 / 10 * 3 - 20;").result.should be_true
   end
-  it "should do test right11" do
-    ast = parser.parse("
-    /*{
-    	{*/
-    		int y;
-    		int x = y + 5 / 10 * 3 - 20;
-    		{
-    			int x, d;
-    			int r;
-    			int t[10][10][10], s[10][10][10];
-    			int a[10];
-    			t[r][r][r] = t[r][r][r] ==s[r][r][r];
-    			a[3] = a[2] * a[d];
-    			if (!a[x])
-    				r=0;
-    		}
-    		while ((x < 1000)) {
-    			r= r;
-    		}
-
-    	/*}
-    }*/
-        ")
+  it "should not do allow int == float" do
+    ast = parser.parse("int x, y; float z;
+                        if (x == z) x = x+y;")
+    puts ast.message
+    if ast.ast
+      ast.ast.print_tree
+    end
+    ast.result.should_not be_true
+  end
+  it "should do allow float == intliteral" do
+    ast = parser.parse("int x, y; float z;
+                        if (0 == z) x = x+y;")
+    puts ast.message
+    if ast.ast
+      ast.ast.print_tree
+    end  
     ast.result.should be_true
-    ast.ast.print_tree    
+  end
+  it "should not do float variable with ! operator" do
+    ast = parser.parse("float z;
+                        if (!z) x = x+y;")
+    puts ast.message                      
+    if ast.ast
+      ast.ast.print_tree
+    end  
+    ast.result.should_not be_true
   end
 end

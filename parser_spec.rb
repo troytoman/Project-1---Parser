@@ -200,6 +200,18 @@ describe CparseParser do
        }
        ").result.should be_true
   end
+  
+  it "should not do parse a float == int" do
+    parser.parse("int test, x, y; float blah;
+       if (test == blah) {
+       	/*do something*/
+       	x = x;
+       } else {
+       	/*do something*/
+       	y=y;
+       }
+       ").result.should_not be_true
+  end
 
   it "should do test right7" do
     parser.parse("int t, r, x, y, n, d, u;
