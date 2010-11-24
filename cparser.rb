@@ -25,9 +25,11 @@ class Proj1Parser
     $array_indices = Array.new    # Track the list of variables used as array indices
     @ast = nil                    # Nil out the AST
 
+    input.gsub!('\n','')
+    input.gsub!('\t','')
     input.gsub!(/([^a-zA-Z0-9])\s*/,'\1')    #remove whitespace (except near IDs)
     input.gsub!(/\s*([^a-zA-Z0-9{}])/,'\1')
-    input.gsub!(/\/\*(([^\*])|(\*[^\/]))*\*\//,'')
+    input.gsub!(/\/\*(([^\*])|(\*[^\/]))*\*\//,'')  #strip comments
 
     tree = @cparser.parse(input)
 

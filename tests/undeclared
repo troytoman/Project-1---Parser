@@ -1,0 +1,1 @@
+int x,y;\nif (test == 0) \n\tx=x+1; \nelse \n\tx=x+2;
