@@ -129,7 +129,6 @@ grammar Cparse
   rule compare_expr
       term '<' comp <LTExpression>
     / term '>' comp <GTExpression>
-#    / add_expr
   end
 
   rule term
@@ -139,7 +138,6 @@ grammar Cparse
   rule add_expr
       factor '+' term <AddExpression>
     / factor '-' term <MinusExpression>
-#    / mult_expr
   end
 
   rule factor
@@ -149,7 +147,6 @@ grammar Cparse
   rule mult_expr
       unary '/' factor <DivExpression>
     / unary '*' factor <MultExpression>
-#    / unary_expr
   end
 
   rule unary
@@ -158,7 +155,6 @@ grammar Cparse
 
   rule unary_expr
       '!' unary  <NotExpression>
-#    / value
   end
   
   rule group
@@ -166,14 +162,13 @@ grammar Cparse
   end
 
   rule paren 
-    '(' or ')' <ParenExpression>
+    '(' ex ')' <ParenExpression>
   end
 
   rule value
       var
     / fval
     / ival
-#    / '(' ex ')' <ParenExpression>
   end
 end
 

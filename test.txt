@@ -1,15 +1,12 @@
-int t, r, x, y, n, d, u;
-if ((t>20)||(r==10)) { 
-x = y*n;
-} else {
-x=y+n;
-}
-if ((r==0)&&(d<1)) {
-x=y-n;
-} else { /*spans
-multiple
-lines*/
-x=(7*x) / (t-u);
-}
-
+int test, x, t;
+    if (test > 10) {
+    	x=x+1;
+    	if (t == 0) {
+    		x=0;
+    	} else {
+    		x=10;
+    	}
+    } else {
+    	x=1;
+    }
 

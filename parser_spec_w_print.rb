@@ -335,7 +335,6 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should_not be_true
-    ast.g.output( :pdf => :"./graph25.pdf" )
   end
 
   it "should parse block statements" do

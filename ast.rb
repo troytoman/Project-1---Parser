@@ -358,7 +358,7 @@ class Assignment_AST_Node < ASTTree
   def build_control_flow(block=nil)
     puts "add statement to block: " + self.to_s  
     block<<self
-    children {|child| type = child.build_control_flow(block)}
+    children {|child| child.build_control_flow(block)}
     return block
   end
   def to_s
@@ -459,9 +459,9 @@ class IfThen_AST_Node < ASTTree
     block << self                            # add if statement to current block
     then_block = ControlFlowGraph.new        # create block for the branch
     block.edge(then_block)                   # create and edge from current block to then branch
+    then_block.edge(new_block)               # create an edge from the then block to post branch block
     children[1].build_control_flow(then_block) # build the control flow for then branch
     block.edge(new_block)                    # create an edge from the existing block to post branch block
-    then_block.edge(new_block)               # create an edge from the then block to post branch block
     
     return new_block    
   end
@@ -474,18 +474,18 @@ end
 class IfThenElse_AST_Node < ASTTree
   def build_control_flow(block)
     new_block = ControlFlowGraph.new         # create new block for post branch
-    block.move_edges(new_block)              # move any existing edges to the next block
+    block.remove_all_outbound                       # move any existing edges to the next block
     block << self                            # add if statement to current block
     
     then_block = ControlFlowGraph.new        # create block for the then branch
     block.edge(then_block)                   # create and edge from current block to then branch
-    children[1].build_control_flow(then_block) # build the control flow for then branch
     then_block.edge(new_block)               # create an edge from the then block to post branch block          
+    children[1].build_control_flow(then_block) # build the control flow for then branch
     
     else_block = ControlFlowGraph.new        # create block for the else branch
+    else_block.edge(new_block)               # create an edge from the then block to post branch block             
     block.edge(else_block)                   # create and edge from current block to then branch
     children[2].build_control_flow(else_block) # build the control flow for then branch
-    else_block.edge(new_block)               # create an edge from the then block to post branch block             
     
     return new_block
   end
@@ -513,7 +513,8 @@ class Program_AST_Node < ASTTree
     
     block = ControlFlowGraph.new
     
-    children.each {|child| child.build_control_flow(block)}
+    new_block = block
+    children.each {|child| new_block = child.build_control_flow(new_block)}
     
     puts "ENDPROGRAM"
     return block

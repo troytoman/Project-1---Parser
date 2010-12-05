@@ -12,6 +12,7 @@ class ControlFlowGraph
     @statements << statement
   end
   def edge(block)
+    puts "ADDING EDGE"
     @outbound_edges << block
     block.inboundedge(self)
   end
@@ -20,6 +21,10 @@ class ControlFlowGraph
   end
   def remove_inbound(block)
     @inbound_edges.delete(block)
+  end
+  def remove_all_outbound
+    puts "REMOVING OUTBOUND EDGES"
+    @outbound_edges = []
   end
   def move_edges(block)
     @outbound_edges.each do |e|
