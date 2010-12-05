@@ -48,7 +48,6 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
-    
     ast.g.output( :pdf => :"./graph.pdf" )
   end
 end

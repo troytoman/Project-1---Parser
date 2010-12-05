@@ -375,6 +375,16 @@ class Declaration_AST_Node < ASTTree
     children {|child| type = child.type_check(type)}
     return type
   end
+  def build_control_flow (block = nil)
+    for i in 0 .. children.length-1 
+      if (children[i].content == "Init")
+        children[i].build_control_flow(block, children[i-1].content)
+      else
+        children[i].build_control_flow(block)
+      end
+    end
+    return block
+  end
 end
 
 class Init_AST_Node < ASTTree
@@ -389,8 +399,9 @@ class Init_AST_Node < ASTTree
     return type
   end
   
-  def build_control_flow(block)
-    puts "add statement to block: " + self.to_s  
+  def build_control_flow(block, var)
+    @var = var
+    puts "add statement to block: " + var + self.to_s 
     
     block<<self
     next_block = block
@@ -398,8 +409,8 @@ class Init_AST_Node < ASTTree
     return next_block
   end
   def to_s
-    s = children[0].to_s + '='
-    for i in 1 .. children.length-1
+    s = @var + "="
+    for i in 0 .. children.length-1
       s = s + children[i].to_s
     end
     return s
@@ -416,11 +427,15 @@ class While_AST_Node < ASTTree
   def build_control_flow(block)
     
     next_block = ControlFlowGraph.new        # Create a block for after the while statement
-    while_statement = ControlFlowGraph.new   # Create new basic block
-    while_statement << self                  # Add the while statement to the block
+    if block.statements.empty?
+      while_statement = block
+    else
+      while_statement = ControlFlowGraph.new # Create new basic block unless the current block is empty
+      block.move_edges(next_block)             # move any existing edges to the next block
+      block.edge(while_statement)              # Connect previous block to while block
+    end
     while_statement.edge(next_block)         # Connect the while statement to the next block
-    block.move_edges(next_block)             # move any existing edges to the next block
-    block.edge(while_statement)              # Connect previous block to while block
+    while_statement << self                  # Add the while statement to the block
     
     while_block = ControlFlowGraph.new       # Create a new basic block for while body
     while_statement.edge(while_block)        # Connect while statement block to the while body

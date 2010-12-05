@@ -1,2 +1,15 @@
-int a, b, c;
-if (a=b+1) c = b+1; else c = a+1; 
+int t, r, x, y, n, d, u;
+if ((t>20)||(r==10)) { 
+x = y*n;
+} else {
+x=y+n;
+}
+if ((r==0)&&(d<1)) {
+x=y-n;
+} else { /*spans
+multiple
+lines*/
+x=(7*x) / (t-u);
+}
+
+

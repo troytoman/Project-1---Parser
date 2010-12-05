@@ -15,6 +15,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph1.pdf" )
   end
 
   it "should not parse an invalid int declaration" do
@@ -42,6 +43,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph2.pdf" )
   end
 
   it "should not parse an invalid float declaration" do
@@ -60,6 +62,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph3.pdf" )
   end
 
   it "should not parse an invalid int assignment" do
@@ -78,6 +81,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph4.pdf" )
   end
 
   it "should parse a float assignment using an exponent -e notation" do
@@ -87,6 +91,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph5.pdf" )
   end
 
   it "should parse a float assignment using an exponent -E notation" do
@@ -96,6 +101,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph6.pdf" )
   end
 
   it "should not parse an invalid float assignment declaration" do
@@ -114,6 +120,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph8.pdf" )
   end
 
   it "should not parse invalid multiple int declarations" do
@@ -132,6 +139,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph9.pdf" )
   end
 
   it "should parse array declarations" do
@@ -141,6 +149,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph10.pdf" )
   end
 
   it "should not parse an invalid array declarations" do
@@ -159,6 +168,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph11.pdf" )
   end
 
   it "should not parse invalid assignment expressions" do
@@ -177,6 +187,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph12.pdf" )
   end
 
   it "should not parse invalid if statements" do
@@ -195,6 +206,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph13.pdf" )
   end
 
   it "should not parse invalid if-else statements" do
@@ -213,6 +225,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph14.pdf" )
   end
 
   it "should parse equivalence expressions" do
@@ -222,6 +235,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph15.pdf" )
   end
 
   it "should parse less_than expressions" do
@@ -231,6 +245,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph16.pdf" )
   end
 
   it "should parse greater_than expressions" do
@@ -240,6 +255,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph17.pdf" )
   end
 
   it "should parse addition expressions" do
@@ -249,6 +265,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph18.pdf" )
   end
 
   it "should parse subtraction expressions" do
@@ -258,6 +275,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph19.pdf" )
   end
 
   it "should parse multiply expressions" do
@@ -267,6 +285,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph20.pdf" )
   end
 
   it "should parse divide expressions" do
@@ -276,6 +295,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph21.pdf" )
   end
 
   it "should parse AND expressions" do
@@ -285,6 +305,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph22.pdf" )
   end
 
   it "should parse NOT expressions" do
@@ -294,6 +315,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph23.pdf" )
   end
 
   it "should parse OR expressions" do
@@ -303,6 +325,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph24.pdf" )
   end
 
   it "should not parse an invalid OR expression" do
@@ -312,6 +335,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should_not be_true
+    ast.g.output( :pdf => :"./graph25.pdf" )
   end
 
   it "should parse block statements" do
@@ -321,6 +345,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph26.pdf" )
   end
 
   it "should not parse invalid block statements" do
@@ -356,6 +381,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph27.pdf" )
   end
 
   it "should do test right3" do
@@ -366,6 +392,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph28.pdf" )
   end
 
   it "should do test right4" do
@@ -376,6 +403,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph29.pdf" )
   end
 
   it "should do test right5" do
@@ -385,6 +413,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph30.pdf" )
   end
 
   it "should do test right6" do
@@ -402,6 +431,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph31.pdf" )
   end
 
   it "should do test right7" do
@@ -425,6 +455,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph32.pdf" )
   end
 
   it "should do test right8" do
@@ -438,6 +469,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph33.pdf" )
   end
 
   it "should do test right9" do
@@ -456,6 +488,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph34.pdf" )
   end
 
   it "should do test right10" do
@@ -467,6 +500,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph35.pdf" )
   end
 
   it "should do test right11" do
@@ -496,6 +530,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph36.pdf" )
   end
 
   it "should do test right21" do
@@ -516,6 +551,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph37.pdf" )
   end
 
   it "should do test right22" do
@@ -528,6 +564,7 @@ describe CparseParser do
       ast.ast.print_tree
     end
     ast.result.should be_true
+    ast.g.output( :pdf => :"./graph38.pdf" )
   end
 
   it "should not do test wrong1" do

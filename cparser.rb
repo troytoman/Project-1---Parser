@@ -50,6 +50,8 @@ class Proj1Parser
     @g.edge[:fontname] = "Verdana"
     @g.edge[:dir]      = "forward"
     @g.edge[:arrowsize]= "0.5"
+    
+    @g.add_node("Input Data\n" + input)
 
     # remove whitespace and comments from the input file
     input.gsub!('\n','')
