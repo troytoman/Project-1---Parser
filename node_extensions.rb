@@ -1,13 +1,15 @@
 # In file node_extensions.rb
 module Cparse
-  require './ast.rb'
+  require './ast.rb'  
 
   class Treetop::Runtime::SyntaxNode
     
     # This method generates an AST node for a parse tree node.
     # It is sometimes replaced by certain nodes that do not need to be in the AST
-    def to_ast
-      ast_subtree = ASTTree.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+    def to_ast(ast_subtree = nil)
+      if !ast_subtree
+        ast_subtree = ASTTree.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      end
       self.elements.each do |node|
         child = node.to_ast
         if child.kind_of?(Array)
@@ -32,6 +34,10 @@ module Cparse
       puts ' ' * @interval.first + self.text_value
       self.elements.map {|x| x.printout}
     end
+    def to_ast
+      ast_subtree = IntegerLiteral_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
+    end
   end
 
   class FloatLiteral < Treetop::Runtime::SyntaxNode
@@ -46,7 +52,10 @@ module Cparse
       puts ' ' * @interval.first + self.text_value
       self.elements.map {|x| x.printout}
     end
-
+    def to_ast
+      ast_subtree = FloatLiteral_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
+    end
   end
 
   class Expression < Treetop::Runtime::SyntaxNode
@@ -61,6 +70,10 @@ module Cparse
       puts ' ' * @interval.first + "Expression"
       self.elements.map {|x| x.printout}
     end
+    def to_ast
+      ast_subtree = ASTTree.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
+    end
   end
 
   class Block < Treetop::Runtime::SyntaxNode
@@ -74,6 +87,10 @@ module Cparse
     def printout
       puts ' ' * @interval.first + "Block"
       self.elements.map {|x| x.printout}
+    end
+    def to_ast
+      ast_subtree = Block_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
     end
   end
 
@@ -115,6 +132,10 @@ module Cparse
       puts ' ' * @interval.first + "Variable Declaration"
       self.elements.map {|x| x.printout}
     end
+    def to_ast
+      ast_subtree = Declaration_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
+    end
   end
 
   class VariableListItem < Treetop::Runtime::SyntaxNode
@@ -129,7 +150,7 @@ module Cparse
       #puts self.text_value
       self.elements.map {|x| x.printout}
     end
-    def to_ast
+    def to_ast 
       ast_subtree = ASTTree.new(self.class.name, @nodedisplay)
       self.elements.each do |node|
         child = node.to_ast
@@ -155,6 +176,10 @@ module Cparse
       puts ' ' * @interval.first + "int"
       self.elements.map {|x| x.printout}
     end
+    def to_ast
+      ast_subtree = Type_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
+    end
   end
 
   class TypeFloat < Treetop::Runtime::SyntaxNode
@@ -168,6 +193,10 @@ module Cparse
     def printout
       puts ' ' * @interval.first + "float"
     end
+    def to_ast
+      ast_subtree = Type_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
+    end
   end
 
   class Pointer < Treetop::Runtime::SyntaxNode
@@ -180,6 +209,10 @@ module Cparse
     end
     def printout
       puts ' ' * @interval.first + "pointer"
+    end
+    def to_ast
+      ast_subtree = ASTTree.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
     end
   end
 
@@ -195,6 +228,10 @@ module Cparse
       puts ' ' * @interval.first + "If-Then-Else"
       self.elements.map {|x| x.printout}
     end
+    def to_ast
+      ast_subtree = IfThenElse_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
+    end
   end
 
   class IfThen < Treetop::Runtime::SyntaxNode
@@ -209,6 +246,10 @@ module Cparse
       puts ' ' * @interval.first + "If-Then"
       self.elements.map {|x| x.printout}
     end
+    def to_ast
+      ast_subtree = IfThen_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
+    end
   end
 
   class While < Treetop::Runtime::SyntaxNode
@@ -222,6 +263,10 @@ module Cparse
     def printout
       puts ' ' * @interval.first + "While"
       self.elements.map {|x| x.printout}
+    end
+    def to_ast
+      ast_subtree = While_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
     end
   end
 
@@ -263,6 +308,10 @@ module Cparse
       puts ' ' * @interval.first + "DeclarationAssignment"
       self.elements.map {|x| x.printout}
     end
+    def to_ast
+      ast_subtree = Init_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
+    end
   end
 
   class AssignmentExpression < Treetop::Runtime::SyntaxNode
@@ -276,6 +325,10 @@ module Cparse
     def printout
       puts ' ' * @interval.first + "Assignment"
       self.elements.map {|x| x.printout}
+    end
+    def to_ast
+      ast_subtree = Assignment_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
     end
   end
 
@@ -291,6 +344,10 @@ module Cparse
       puts ' ' * @interval.first + self.text_value
       self.elements.map {|x| x.printout}
     end
+    def to_ast
+      ast_subtree = Variable_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
+    end
   end
 
   class ArrayVariableIndex < Treetop::Runtime::SyntaxNode
@@ -304,6 +361,10 @@ module Cparse
     def printout
       puts ' ' * @interval.first + self.text_value
       self.elements.map {|x| x.printout}
+    end
+    def to_ast
+      ast_subtree = ASTTree.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
     end
   end
   
@@ -319,6 +380,10 @@ module Cparse
       puts ' ' * @interval.first + ">"
       self.elements.map {|x| x.printout}
     end
+    def to_ast
+      ast_subtree = ASTTree.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
+    end
   end
 
   class LTExpression < Treetop::Runtime::SyntaxNode
@@ -332,6 +397,10 @@ module Cparse
     def printout
       puts ' ' * @interval.first + "<"
       self.elements.map {|x| x.printout}
+    end
+    def to_ast
+      ast_subtree = ASTTree.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
     end
   end
 
@@ -347,6 +416,10 @@ module Cparse
       puts ' ' * @interval.first + "=="
       self.elements.map {|x| x.printout}
     end
+    def to_ast
+      ast_subtree = EquateExpression_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
+    end
   end
 
   class AndExpression < Treetop::Runtime::SyntaxNode
@@ -360,6 +433,10 @@ module Cparse
     def printout
       puts ' ' * @interval.first + "&&"
       self.elements.map {|x| x.printout}
+    end
+    def to_ast
+      ast_subtree = ASTTree.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
     end
   end
 
@@ -375,6 +452,10 @@ module Cparse
       puts ' ' * @interval.first + "||"
       self.elements.map {|x| x.printout}
     end
+    def to_ast
+      ast_subtree = ASTTree.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
+    end
   end
 
   class AddExpression < Treetop::Runtime::SyntaxNode
@@ -388,6 +469,10 @@ module Cparse
     def printout
       puts ' ' * @interval.first + "+"
       self.elements.map {|x| x.printout}
+    end
+    def to_ast
+      ast_subtree = Operator_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
     end
   end
 
@@ -403,6 +488,10 @@ module Cparse
       puts ' ' * @interval.first + "-"
       self.elements.map {|x| x.printout}
     end
+    def to_ast
+      ast_subtree = Operator_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
+    end
   end
 
   class DivExpression < Treetop::Runtime::SyntaxNode
@@ -416,6 +505,10 @@ module Cparse
     def printout
       puts ' ' * @interval.first + "/"
       self.elements.map {|x| x.printout}
+    end
+    def to_ast
+      ast_subtree = Operator_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
     end
   end
 
@@ -431,6 +524,10 @@ module Cparse
       puts ' ' * @interval.first + "*"
       self.elements.map {|x| x.printout}
     end
+    def to_ast
+      ast_subtree = Operator_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
+    end
   end
 
   class NotExpression < Treetop::Runtime::SyntaxNode
@@ -445,7 +542,10 @@ module Cparse
       puts ' ' * @interval.first + "!"
       self.elements.map {|x| x.printout}
     end
-
+    def to_ast
+      ast_subtree = NotExpression_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
+    end
   end
 
   class ParenExpression < Treetop::Runtime::SyntaxNode
@@ -459,6 +559,10 @@ module Cparse
     def printout
       puts ' ' * @interval.first + "( )"
       self.elements.map {|x| x.printout}
+    end
+    def to_ast
+      ast_subtree = Operator_AST_Node.new(self.class.name+@interval.first.to_s, self.class.name, @nodedisplay)
+      super(ast_subtree)
     end
   end
 

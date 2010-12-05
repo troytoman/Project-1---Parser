@@ -28,15 +28,16 @@ puts "RESULTS:" + parse_result.message
 if parse_result.ast
   puts "Printing AST: \n"
   parse_result.ast.print_tree
-  if parse_result.result
-    puts "\nCreating json format"
-    j = parse_result.ast.to_json
-    puts j
-    puts "\nCreating new AST from the json"
-    another_ast = JSON.parse(j)
-    another_ast.type_check
-    another_ast.print_tree
-  end
+  parse_result.g.output( :pdf => :"./graph.pdf" )
+#  if parse_result.result
+#    puts "\nCreating json format"
+#    j = parse_result.ast.to_json
+#    puts j
+#    puts "\nCreating new AST from the json"
+#    another_ast = JSON.parse(j)
+#    another_ast.type_check
+#    another_ast.print_tree
+#  end
 end
 
 puts ("\n" * 2)

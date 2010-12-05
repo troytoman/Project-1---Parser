@@ -6,13 +6,15 @@ require 'rubygems'
 require 'treetop'
 puts 'Loaded Treetop with no problems...'
 
+require 'graphviz'
+
 require './node_extensions.rb'
 
 Treetop.load 'cparse'
 puts 'Loaded cparse grammar with no problems...'
 
 class Proj1Parser
-  attr_reader :message, :result, :ast
+  attr_reader :message, :result, :ast, :g
 
   def initialize
     puts 'initializing'
@@ -23,8 +25,33 @@ class Proj1Parser
   def parse (input)
     $symbol_table = {}
     $array_indices = Array.new    # Track the list of variables used as array indices
-    @ast = nil                    # Nil out the AST
+    @ast = nil                    # Nil out the AST and CFG
+    @cfg = nil
+    # initialize new Graphviz graph
+    @g = GraphViz::new( "structs", "type" => "graph" )
+    @g[:rankdir] = "TD"
 
+    # set global node options
+    @g.node[:color]    = "#ddaa66"
+    @g.node[:style]    = "filled"
+    @g.node[:shape]    = "box"
+    @g.node[:penwidth] = "1"
+    @g.node[:fontname] = "Trebuchet MS"
+    @g.node[:fontsize] = "8"
+    @g.node[:fillcolor]= "#ffeecc"
+    @g.node[:fontcolor]= "#775500"
+    @g.node[:margin]   = "0.0"
+
+    # set global edge options
+    @g.edge[:color]    = "#999999"
+    @g.edge[:weight]   = "1"
+    @g.edge[:fontsize] = "6"
+    @g.edge[:fontcolor]= "#444444"
+    @g.edge[:fontname] = "Verdana"
+    @g.edge[:dir]      = "forward"
+    @g.edge[:arrowsize]= "0.5"
+
+    # remove whitespace and comments from the input file
     input.gsub!('\n','')
     input.gsub!('\t','')
     input.gsub!(/([^a-zA-Z0-9])\s*/,'\1')    #remove whitespace (except near IDs)
@@ -39,7 +66,7 @@ class Proj1Parser
       self.clean_tree(tree)                # Remove most useless parse tree nodes
       @ast = tree.to_ast                   # Construct the AST
       if @ast.kind_of?(Array)              # If the AST has multiple statements, add a Program parent
-        ast_prime = ASTTree.new("Program", "Program", "Program")
+        ast_prime = Program_AST_Node.new("Program", "Program", "Program")
         @ast.each  {|node| ast_prime<<node}
         @ast = ast_prime
       end
@@ -53,6 +80,8 @@ class Proj1Parser
         return self
       end
       @result = true                       # Mark the parse as successful
+      @cfg = @ast.build_control_flow       # build the control flow graph
+      @cfg.to_dot(@g)
       return self
     else
       @message = "\n\nNo, I don't understand.\n"  # Handle parsing errors
